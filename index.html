@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>ตารางคำนวณยอดขายตั๋ว</title>
+  <style>
+    :root {
+      font-family: "Leelawadee UI", "Noto Sans Thai", "Segoe UI", system-ui, Tahoma, sans-serif;
+      color: #172033;
+      background: #f5f7fb;
+      font-synthesis: none;
+      --navy: #18243a;
+      --teal: #245fce;
+      --teal-soft: #eaf1ff;
+      --line: #e1e8f0;
+      --muted: #566579;
+      --amber: #f7faff;
+      --red: #b42332;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 28px 16px 44px; line-height: 1.5; }
+    main { width: min(100%, 980px); margin: 0 auto; }
+    header { margin: 0 0 20px; }
+    h1 { margin: 0; color: var(--navy); font-size: clamp(1.7rem, 4vw, 2.1rem); line-height: 1.25; letter-spacing: -.025em; font-weight: 800; }
+    .intro { margin: 8px 0 0; color: var(--muted); line-height: 1.7; }
+    .top-panel, .ticket-card, .results { background: #fff; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 8px 24px rgba(24, 36, 58, .055); }
+    .top-panel { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px 19px; margin-bottom: 16px; }
+    .per-book { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .per-book label { font-weight: 700; }
+    .per-book input { width: 110px; }
+    .unit { color: var(--muted); }
+    .helper { font-size: .88rem; color: var(--muted); }
+    .page-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 6px; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 14px; background: #eaf0f7; }
+    .tab-button { min-height: 48px; padding: 10px 14px; border: 0; border-radius: 10px; background: transparent; color: #526176; font: inherit; font-weight: 700; cursor: pointer; }
+    .tab-button.active { background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(24, 36, 58, .1); }
+    .page-panel[hidden] { display: none !important; }
+    .counter-heading { margin: 0 0 10px; }
+    .counter-heading h2 { margin: 0; color: var(--navy); font-size: 1.25rem; }
+    .counter-heading p { margin: 3px 0 0; color: var(--muted); font-size: .92rem; }
+    .daily-glance { margin: 0 0 11px; padding: 12px; border: 1px solid #c7d8f5; border-radius: 15px; background: linear-gradient(135deg, #edf4ff, #f8fbff); }
+    .daily-glance-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .daily-glance-title { color: #173c78; font-size: 1rem; font-weight: 850; }
+    .daily-glance-date { display: block; color: var(--muted); font-size: .75rem; font-weight: 600; }
+    .daily-glance-status { color: var(--muted); font-size: .8rem; font-weight: 750; text-align: right; }
+    .daily-glance-status.match { color: #08776b; }
+    .daily-glance-status.mismatch { color: var(--red); }
+    .daily-glance-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .daily-glance-card { display: grid; gap: 1px; padding: 9px 11px; border: 1px solid #dce7f6; border-radius: 11px; background: #fff; }
+    .daily-glance-card span { color: #42536a; font-size: .82rem; font-weight: 700; }
+    .daily-glance-card strong { color: #173c78; font-size: clamp(1.25rem, 3.5vw, 1.75rem); line-height: 1.25; font-variant-numeric: tabular-nums; }
+    .daily-glance-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .daily-glance-actions button { flex: 1 1 0; min-height: 42px; padding: 7px 9px; font-size: .85rem; }
+    .pdf-button { color: #fff; background: #17643b; }
+    .pdf-button:hover { background: #104b2c; }
+    .counter-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .counter-card { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 6px 18px rgba(24, 36, 58, .045); }
+    .counter-card .card-heading { margin-bottom: 8px; }
+    .counter-card .card-heading h3 { margin: 0; color: var(--navy); font-size: 1.1rem; }
+    .counter-card .price-tag { padding: 3px 8px; font-size: .84rem; }
+    .counter-card .field { gap: 7px; }
+    .counter-card input { min-height: 50px; text-align: center; font-size: 1.1rem; font-weight: 700; }
+    .counter-amount { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding-top: 8px; margin-top: 8px; border-top: 1px solid #e8edf4; color: var(--muted); font-size: .9rem; }
+    .counter-amount strong { color: var(--navy); font-size: 1rem; font-variant-numeric: tabular-nums; }
+    .counter-total-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .counter-total-card { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid #e1e8f0; border-radius: 12px; background: #f6f8fc; }
+    .counter-total-card span { color: var(--muted); font-size: .92rem; }
+    .counter-total-card strong { color: var(--navy); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+    .entry-total-grid .counter-total-card { gap: 3px; min-height: 78px; padding: 10px 13px; border-color: #cbd9ed; background: #edf4ff; }
+    .entry-total-grid .counter-total-card:first-child { border-color: #d9c8f3; background: #f5efff; }
+    .entry-total-grid .counter-total-card:last-child { border-color: #b9dfc7; background: #edf8f0; }
+    .entry-total-grid .counter-total-card span { color: #33455f; font-size: .9rem; font-weight: 800; }
+    .entry-total-grid .counter-total-card strong { color: #173c78; font-size: clamp(1.45rem, 4vw, 1.9rem); line-height: 1.25; }
+    .entry-total-grid .counter-total-card:first-child strong { color: #5d2497; }
+    .entry-total-grid .counter-total-card:last-child strong { color: #17643b; }
+    .counter-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .counter-actions button { flex: 1 1 180px; min-height: 48px; }
+    .counter-note { min-height: 0; margin: 5px 0 0; color: var(--muted); font-size: .87rem; }
+    .counter-note.error { color: var(--red); font-weight: 700; }
+    .counter-note.success { color: #08776b; font-weight: 700; }
+    .comparison-panel { margin-top: 12px; padding: 15px 17px; border: 1px solid #c9d9ee; border-radius: 15px; background: linear-gradient(135deg, #f2f7ff, #fff); }
+    .comparison-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .comparison-heading h2 { margin: 0; color: var(--navy); font-size: 1.04rem; }
+    .tab-link { min-height: 36px; padding: 6px 10px; color: #1749a5; background: #eaf1ff; font-size: .84rem; }
+    .comparison-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .comparison-stats > div { display: grid; gap: 1px; padding: 8px 10px; border: 1px solid #dce6f2; border-radius: 10px; background: #fff; }
+    .comparison-stats span { color: var(--muted); font-size: .82rem; }
+    .comparison-stats strong { color: var(--navy); font-size: 1.08rem; font-variant-numeric: tabular-nums; }
+    .comparison-stats strong.match, .daily-quick.match { color: #08776b; }
+    .comparison-stats strong.mismatch, .daily-quick.mismatch { color: var(--red); }
+    .comparison-status { margin: 7px 0 0; color: var(--muted); font-size: .88rem; font-weight: 700; }
+    .comparison-status.match { color: #08776b; }
+    .comparison-status.mismatch { color: var(--red); }
+    .comparison-visitors { margin: 2px 0 0; color: var(--muted); font-size: .82rem; }
+    .comparison-visitors.match, .daily-quick-sub.match { color: #08776b; font-weight: 700; }
+    .comparison-visitors.mismatch, .daily-quick-sub.mismatch { color: var(--red); font-weight: 700; }
+    .free-entry { display: grid; gap: 7px; margin-top: 9px; padding: 9px 10px; border: 1px dashed #bdc9d8; border-radius: 12px; background: #fafbfd; }
+    .free-heading { display: flex; align-items: baseline; gap: 8px; }
+    .free-heading strong { color: var(--navy); }
+    .free-heading span { color: var(--muted); font-size: .78rem; }
+    .free-count-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .free-count-option { display: grid; grid-template-columns: minmax(0, 1fr) 60px; align-items: center; gap: 5px; min-width: 0; padding: 5px 6px; border: 1px solid #e1e8f0; border-radius: 9px; background: #fff; color: #42536a; font-size: .75rem; font-weight: 650; line-height: 1.25; }
+    .free-count-option span { overflow-wrap: anywhere; }
+    .free-count-option input[type="number"], .legacy-free-entry input[type="number"] { width: 100%; min-height: 40px; padding: 5px; text-align: center; font-size: 16px; font-weight: 700; }
+    .legacy-free-entry { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px; border: 1px solid #e1e8f0; border-radius: 9px; color: var(--muted); font-size: .78rem; }
+    .legacy-free-entry input { width: 64px !important; }
+    .legacy-free-entry[hidden] { display: none !important; }
+    .daily-row[hidden] { display: none; }
+    .daily-summary { margin-top: 9px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 13px; background: #fff; box-shadow: 0 5px 16px rgba(24, 36, 58, .04); }
+    .daily-summary-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .daily-summary h2 { margin: 0; color: var(--navy); font-size: 1rem; }
+    .daily-quick-stack { display: grid; gap: 1px; margin-top: 4px; }
+    .daily-quick { color: var(--navy); font-size: .9rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .daily-quick-sub { color: var(--muted); font-size: .8rem; }
+    .daily-date { margin: 2px 0 6px; color: var(--muted); font-size: .82rem; }
+    .daily-details { margin-top: 8px; }
+    .daily-details summary { color: #42536a; font-size: .88rem; font-weight: 700; cursor: pointer; }
+    .daily-details[open] { padding-top: 8px; }
+    .daily-table { overflow: hidden; border: 1px solid #e7ecf3; border-radius: 12px; }
+    .daily-row { display: grid; grid-template-columns: 1.35fr .8fr .8fr .65fr; gap: 7px; align-items: center; padding: 9px 10px; border-top: 1px solid #e8edf4; text-align: right; font-variant-numeric: tabular-nums; line-height: 1.3; }
+    .daily-row > :first-child { text-align: left; }
+    .daily-row.daily-head { border-top: 0; background: #f6f8fc; color: #526176; font-size: .8rem; font-weight: 700; }
+    .daily-type { font-weight: 750; }
+    .daily-money { display: block; margin-top: 2px; color: var(--muted); font-size: .76rem; font-weight: 500; }
+    .daily-difference.match { color: #08776b; font-weight: 800; }
+    .daily-difference.mismatch { color: var(--red); font-weight: 800; }
+    .daily-row[data-price="40"] .daily-type { color: #6b21a8; }
+    .daily-row[data-price="60"] .daily-type { color: #754500; }
+    .daily-row[data-price="100"] .daily-type { color: #1749a5; }
+    .daily-row[data-price="150"] .daily-type { color: #17643b; }
+    .daily-actions { margin-top: 13px; }
+    .ticket-card[data-price="40"] .price-tag, .counter-card[data-price="40"] .price-tag { background: #f3e8ff; color: #6b21a8; }
+    .ticket-card[data-price="60"] .price-tag, .counter-card[data-price="60"] .price-tag { background: #fff4cf; color: #754500; }
+    .ticket-card[data-price="100"] .price-tag, .counter-card[data-price="100"] .price-tag { background: #eaf1ff; color: #1749a5; }
+    .ticket-card[data-price="150"] .price-tag, .counter-card[data-price="150"] .price-tag { background: #e7f6ec; color: #17643b; }
+    .counter-card[data-price="40"] .card-heading h3 { color: #6b21a8; }
+    .counter-card[data-price="60"] .card-heading h3 { color: #754500; }
+    .counter-card[data-price="100"] .card-heading h3 { color: #1749a5; }
+    .counter-card[data-price="150"] .card-heading h3 { color: #17643b; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .ticket-card { position: relative; overflow: hidden; padding: 18px; }
+    .ticket-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, #245fce, #55a6dc); }
+    .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .ticket-card[data-price="40"]::before { background: linear-gradient(90deg, #7c3aed, #b38af2); }
+    .ticket-card[data-price="60"]::before { background: linear-gradient(90deg, #b7791f, #e9bd45); }
+    .ticket-card[data-price="100"]::before { background: linear-gradient(90deg, #245fce, #62a2ee); }
+    .ticket-card[data-price="150"]::before { background: linear-gradient(90deg, #16864a, #62bd7a); }
+    .ticket-card[data-price="40"] .price-tag { background: #f3e8ff; color: #6b21a8; }
+    .ticket-card[data-price="60"] .price-tag { background: #fff4cf; color: #754500; }
+    .ticket-card[data-price="100"] .price-tag { background: #eaf1ff; color: #1749a5; }
+    .ticket-card[data-price="150"] .price-tag { background: #e7f6ec; color: #17643b; }
+    .ticket-card[data-price="40"] .card-heading h2 { color: #6b21a8; }
+    .ticket-card[data-price="60"] .card-heading h2 { color: #754500; }
+    .ticket-card[data-price="100"] .card-heading h2 { color: #1749a5; }
+    .ticket-card[data-price="150"] .card-heading h2 { color: #17643b; }
+    .card-heading h2 { margin: 0; color: var(--navy); font-size: 1.14rem; font-weight: 750; }
+    .price-tag { padding: 5px 11px; border-radius: 999px; background: var(--teal-soft); color: #1749a5; font-weight: 750; white-space: nowrap; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px 12px; }
+    .field { display: grid; gap: 5px; }
+    .field label { color: #3d4d61; font-size: .92rem; font-weight: 600; }
+    .field-note { color: #566579; font-size: .82rem; line-height: 1.4; }
+    input[type="number"] { width: 100%; min-height: 44px; border: 1px solid #cbd6e3; border-radius: 10px; padding: 9px 11px; color: #172033; background: var(--amber); font: inherit; font-size: 1rem; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
+    input[type="number"]:focus { outline: none; border-color: var(--teal); background: #fff; box-shadow: 0 0 0 4px rgba(36, 95, 206, .14); }
+    .card-status { min-height: 25px; margin-top: 10px; color: var(--muted); font-size: .9rem; }
+    .card-status.error { color: var(--red); font-weight: 700; }
+    .card-status.ready { color: #08776b; font-weight: 650; }
+    .results { padding: 20px; margin-top: 16px; }
+    .results h2 { margin: 0 0 13px; color: var(--navy); font-size: 1.18rem; font-weight: 750; }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .summary-item { background: #f6f8fc; border: 1px solid #e7ecf3; border-radius: 13px; padding: 14px 16px; }
+    .summary-label { color: var(--muted); font-size: .92rem; font-weight: 550; }
+    .summary-value { margin-top: 4px; font-size: clamp(1.4rem, 4vw, 1.8rem); line-height: 1.3; font-weight: 800; color: var(--navy); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+    #summary-note { min-height: 25px; margin: 11px 0 0; color: var(--muted); line-height: 1.5; }
+    #summary-note.error { color: var(--red); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+    button { min-height: 45px; border: 0; border-radius: 10px; padding: 10px 17px; font: inherit; font-weight: 800; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #79c9be88; outline-offset: 2px; }
+    .calculate { color: white; background: var(--teal); box-shadow: 0 4px 10px rgba(36, 95, 206, .18); transition: background .15s ease, transform .15s ease, box-shadow .15s ease; }
+    .calculate:hover { background: #194da9; box-shadow: 0 6px 14px rgba(36, 95, 206, .24); transform: translateY(-1px); }
+    .reset { color: #a32c39; background: #fff; border: 1px solid #e3c8cc; transition: background .15s ease, border-color .15s ease; }
+    .reset:hover { background: #fff6f6; border-color: #d8aeb4; }
+    .footnote { margin: 13px 2px 0; color: var(--muted); font-size: .88rem; line-height: 1.65; }
+    @media (max-width: 640px) {
+      body { padding: 10px 12px calc(16px + env(safe-area-inset-bottom)); font-size: 16px; }
+      main { width: 100%; }
+      header { margin-bottom: 8px; }
+      h1 { font-size: 1.55rem; }
+      .intro { font-size: .96rem; }
+      .top-panel { align-items: flex-start; flex-direction: column; gap: 10px; padding: 14px; }
+      .per-book { width: 100%; gap: 10px; }
+      .per-book input { width: 104px; min-height: 48px; font-size: 16px; }
+      .cards { grid-template-columns: 1fr; gap: 12px; }
+      .page-tabs { gap: 5px; padding: 5px; }
+      .tab-button { min-height: 48px; padding: 9px 8px; font-size: .92rem; }
+      .counter-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .counter-card { padding: 9px; border-radius: 12px; }
+      .counter-card .card-heading { align-items: flex-start; gap: 4px; flex-direction: column; margin-bottom: 5px; }
+      .counter-card .card-heading h3 { font-size: 1rem; }
+      .counter-card .price-tag { padding: 2px 7px; font-size: .76rem; }
+      .counter-card .field { gap: 3px; }
+      .counter-card .field label { font-size: .84rem; }
+      .counter-card input { min-height: 44px; font-size: 1rem; }
+      .counter-amount { padding-top: 5px; margin-top: 5px; font-size: .82rem; }
+      .counter-amount strong { font-size: .92rem; }
+      .counter-total-grid { gap: 7px; margin-top: 8px; }
+      .counter-total-card { padding: 8px 10px; }
+      .counter-total-card span { font-size: .82rem; }
+      .counter-total-card strong { font-size: 1.15rem; }
+      .counter-actions { display: flex; flex-wrap: nowrap; gap: 7px; margin-top: 7px; }
+      .counter-actions button { width: auto; min-width: 0; min-height: 46px; flex: 1 1 0; padding: 8px 6px; font-size: .85rem; }
+      .counter-heading { margin-bottom: 7px; }
+      .counter-heading h2 { font-size: 1.12rem; }
+      .counter-heading p { font-size: .82rem; line-height: 1.4; }
+      .daily-glance { margin-bottom: 8px; padding: 9px; }
+      .daily-glance-top { margin-bottom: 6px; }
+      .daily-glance-title { font-size: .9rem; }
+      .daily-glance-status { font-size: .72rem; }
+      .daily-glance-values { gap: 6px; }
+      .daily-glance-card { padding: 7px 8px; }
+      .daily-glance-card span { font-size: .74rem; }
+      .daily-glance-card strong { font-size: 1.25rem; }
+      .daily-glance-actions { gap: 6px; margin-top: 6px; }
+      .daily-glance-actions button { min-height: 40px; padding: 6px; font-size: .76rem; }
+      .entry-total-grid .counter-total-card { min-height: 69px; padding: 8px; }
+      .entry-total-grid .counter-total-card span { font-size: .78rem; }
+      .entry-total-grid .counter-total-card strong { font-size: 1.35rem; }
+      .free-entry { gap: 6px; margin-top: 7px; padding: 7px; }
+      .free-heading { gap: 6px; }
+      .free-heading span { font-size: .72rem; }
+      .free-count-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+      .free-count-option { grid-template-columns: minmax(0, 1fr) 56px; gap: 4px; padding: 4px 5px; font-size: .72rem; }
+      .free-count-option input[type="number"], .legacy-free-entry input[type="number"] { min-height: 40px; padding: 4px; }
+      .legacy-free-entry { font-size: .72rem; }
+      .counter-note { font-size: .77rem; line-height: 1.35; }
+      .daily-summary { padding: 9px 10px; }
+      .comparison-panel { padding: 11px; }
+      .comparison-heading h2 { font-size: .95rem; }
+      .comparison-stats { gap: 5px; margin-top: 7px; }
+      .comparison-stats > div { padding: 6px; }
+      .comparison-stats span { font-size: .74rem; }
+      .comparison-stats strong { font-size: .94rem; }
+      .tab-link { min-height: 40px; padding: 6px 8px; font-size: .78rem; }
+      .daily-row { grid-template-columns: 1.25fr .75fr .75fr .65fr; gap: 4px; padding: 7px 6px; font-size: .76rem; }
+      .daily-row.daily-head { font-size: .72rem; }
+      .daily-money { font-size: .68rem; }
+      .ticket-card { min-width: 0; padding: 15px; }
+      .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; }
+      .field { min-width: 0; }
+      .field label { font-size: .92rem; }
+      .field-note { font-size: .8rem; }
+      input[type="number"] { min-width: 0; min-height: 48px; padding: 10px; font-size: 16px; }
+      .card-status { margin-top: 12px; }
+      .results { padding: 15px; }
+      .summary-grid { grid-template-columns: 1fr; gap: 9px; }
+      .summary-item { padding: 12px 14px; }
+      .summary-value { font-size: 1.5rem; }
+      #summary-note { overflow-wrap: anywhere; }
+      .actions { display: grid; grid-template-columns: 1fr; gap: 10px; }
+      .actions button { width: 100%; min-height: 52px; padding: 12px 16px; }
+    }
+    @media (max-width: 360px) {
+      body { padding-right: 9px; padding-left: 9px; }
+      .fields { grid-template-columns: 1fr; }
+      .ticket-card { padding: 13px; }
+      .card-heading h2 { font-size: 1.05rem; }
+      .free-count-option { grid-template-columns: minmax(0, 1fr) 50px; }
+    }
+    body.counter-view { padding-top: 8px; padding-bottom: 10px; }
+    body.counter-view > main > header { display: none; }
+    body.counter-view .page-tabs { margin-bottom: 8px; }
+    .print-report { display: none; }
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      html, body { min-height: 0; padding: 0 !important; background: #fff !important; color: #111 !important; }
+      body > main { width: 100%; max-width: none; margin: 0; }
+      body > main > header, .page-tabs, #ticket-page { display: none !important; }
+      #counter-page { display: block !important; }
+      #counter-page > :not(#daily-report) { display: none !important; }
+      #daily-report { display: block !important; color: #111; font-size: 10pt; }
+      #daily-report header { margin: 0 0 12px; padding-bottom: 9px; border-bottom: 2px solid #23395d; }
+      #daily-report .report-kicker { margin: 0 0 2px; color: #526176; font-size: 9pt; font-weight: 700; }
+      #daily-report h1 { color: #172033; font-size: 21pt; }
+      #daily-report time { display: block; margin-top: 4px; color: #42536a; }
+      .report-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 10px 0 15px; }
+      .report-stat { padding: 8px; border: 1px solid #ccd5e1; border-radius: 7px; }
+      .report-stat span { display: block; color: #526176; font-size: 8pt; }
+      .report-stat strong { display: block; margin-top: 2px; color: #172033; font-size: 13pt; }
+      #daily-report h2 { margin: 13px 0 6px; color: #23395d; font-size: 12pt; }
+      .report-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+      .report-table th, .report-table td { padding: 6px 5px; border: 1px solid #cbd5e1; text-align: right; }
+      .report-table th { background: #eef3f9 !important; color: #23395d; font-weight: 800; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .report-table th:first-child, .report-table td:first-child { text-align: left; }
+      .report-note { margin: 10px 0 0; color: #526176; font-size: 8pt; }
+      .report-match { color: #08776b; font-weight: 800; }
+      .report-mismatch { color: #b42332; font-weight: 800; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>ตารางคำนวณยอดขายตั๋ว</h1>
+      <p class="intro">กรอกช่วงเล่มและเลขตั๋วของแต่ละราคา ระบบจะนับตั๋วและรวมยอดขายให้</p>
+    </header>
+
+    <nav class="page-tabs" aria-label="เลือกหน้าคำนวณ">
+      <button type="button" class="tab-button active" data-view="ticket-page" aria-pressed="true">คำนวณจากเลขตั๋ว</button>
+      <button type="button" class="tab-button" data-view="counter-page" aria-pressed="false">หน้าเคาน์เตอร์</button>
+    </nav>
+
+    <section id="ticket-page" class="page-panel">
+    <section class="top-panel" aria-label="จำนวนตั๋วต่อเล่ม">
+      <div class="per-book">
+        <label for="per-book">จำนวนตั๋วต่อเล่ม</label>
+        <input id="per-book" type="number" min="1" step="1" value="100" inputmode="numeric">
+        <span class="unit">ใบ</span>
+      </div>
+      <div class="helper">กรอกข้อมูลในช่องด้านล่าง</div>
+    </section>
+
+    <section class="cards" aria-label="ช่วงตั๋วแยกตามราคา">
+      <article class="ticket-card" data-price="40">
+        <div class="card-heading"><h2>นักศึกษา นักเรียน บุคลากร</h2><span class="price-tag">40 บาท</span></div>
+        <div class="fields">
+          <div class="field"><label for="book-start-40">เล่มเริ่มต้น</label><input id="book-start-40" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-start-40">เลขเริ่มต้น</label><input id="ticket-start-40" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="book-end-40">เล่มสิ้นสุด</label><input id="book-end-40" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-end-40">เลขสิ้นสุด</label><input id="ticket-end-40" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-40"><span class="field-note" id="end-note-40">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+        </div>
+        <div class="card-status" id="status-40" aria-live="polite">รอกรอกข้อมูล</div>
+      </article>
+
+      <article class="ticket-card" data-price="60">
+        <div class="card-heading"><h2>ผู้ใหญ่</h2><span class="price-tag">60 บาท</span></div>
+        <div class="fields">
+          <div class="field"><label for="book-start-60">เล่มเริ่มต้น</label><input id="book-start-60" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-start-60">เลขเริ่มต้น</label><input id="ticket-start-60" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="book-end-60">เล่มสิ้นสุด</label><input id="book-end-60" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-end-60">เลขสิ้นสุด</label><input id="ticket-end-60" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-60"><span class="field-note" id="end-note-60">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+        </div>
+        <div class="card-status" id="status-60" aria-live="polite">รอกรอกข้อมูล</div>
+      </article>
+
+      <article class="ticket-card" data-price="100">
+        <div class="card-heading"><h2>เด็กต่างชาติ</h2><span class="price-tag">100 บาท</span></div>
+        <div class="fields">
+          <div class="field"><label for="book-start-100">เล่มเริ่มต้น</label><input id="book-start-100" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-start-100">เลขเริ่มต้น</label><input id="ticket-start-100" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="book-end-100">เล่มสิ้นสุด</label><input id="book-end-100" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-end-100">เลขสิ้นสุด</label><input id="ticket-end-100" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-100"><span class="field-note" id="end-note-100">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+        </div>
+        <div class="card-status" id="status-100" aria-live="polite">รอกรอกข้อมูล</div>
+      </article>
+
+      <article class="ticket-card" data-price="150">
+        <div class="card-heading"><h2>ผู้ใหญ่ต่างชาติ</h2><span class="price-tag">150 บาท</span></div>
+        <div class="fields">
+          <div class="field"><label for="book-start-150">เล่มเริ่มต้น</label><input id="book-start-150" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-start-150">เลขเริ่มต้น</label><input id="ticket-start-150" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="book-end-150">เล่มสิ้นสุด</label><input id="book-end-150" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
+          <div class="field"><label for="ticket-end-150">เลขสิ้นสุด</label><input id="ticket-end-150" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-150"><span class="field-note" id="end-note-150">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+        </div>
+        <div class="card-status" id="status-150" aria-live="polite">รอกรอกข้อมูล</div>
+      </article>
+    </section>
+
+    <section class="results" aria-labelledby="results-title">
+      <h2 id="results-title">ยอดขายรวม</h2>
+      <div class="summary-grid">
+        <div class="summary-item"><div class="summary-label">จำนวนตั๋วที่ขาย</div><div class="summary-value" id="total-tickets">—</div></div>
+        <div class="summary-item"><div class="summary-label">ยอดขายทั้งหมด</div><div class="summary-value" id="total-sales">—</div></div>
+      </div>
+      <p id="summary-note" aria-live="polite">กรอกช่วงตั๋วแล้วกดปุ่มเพื่อคำนวณและเชื่อมยอดของวันนี้</p>
+      <div class="actions">
+        <button class="calculate" id="calculate" type="button">คำนวณและอัปเดตยอดตั๋ววันนี้</button>
+        <button class="reset" id="reset" type="button">ล้างเลขตั๋ว เริ่มวันใหม่</button>
+      </div>
+    </section>
+
+    <section class="comparison-panel" aria-labelledby="ticket-comparison-title">
+      <div class="comparison-heading"><h2 id="ticket-comparison-title">เทียบจำนวนตั๋วกับคนเข้าวันนี้</h2><button class="tab-link" type="button" data-view="counter-page">ไปหน้าเคาน์เตอร์</button></div>
+      <div class="comparison-stats">
+        <div><span>ตั๋วขาย</span><strong id="ticket-today-total">— ใบ</strong></div>
+        <div><span>คนชำระ</span><strong id="paid-attendance-total">0 คน</strong></div>
+        <div><span>ผลต่างรวม</span><strong id="ticket-attendance-difference">—</strong></div>
+      </div>
+      <p class="comparison-status" id="ticket-match-status" aria-live="polite">กด “คำนวณและอัปเดตยอดตั๋ววันนี้” เพื่อเริ่มเทียบกับจำนวนคนในหน้าเคาน์เตอร์</p>
+      <p class="comparison-visitors" id="ticket-visitor-total">เข้าฟรี 0 คน · ผู้เข้าชมรวม 0 คน</p>
+      <p class="comparison-visitors" id="ticket-money-comparison">ยอดขายจากตั๋ว: — บาท · ยอดหน้าเคาน์เตอร์: 0 บาท · ผลต่าง —</p>
+      <p class="comparison-visitors">ผลต่างเทียบเฉพาะตั๋วกับคนชำระ ไม่รวมผู้เข้าฟรี · อัปเดตยอดตั๋วได้โดยไม่บวกซ้ำ</p>
+    </section>
+
+    <p class="footnote">นับเลขเริ่มต้นและเลขสิ้นสุดรวมด้วย เช่น เลข 1 ถึง 20 ในเล่มเดียว เท่ากับ 20 ใบ ระบบจะจำข้อมูลไว้ในเบราว์เซอร์นี้ และปุ่มเริ่มวันใหม่จะล้างเฉพาะช่องเลขตั๋ว</p>
+    </section>
+
+    <section id="counter-page" class="page-panel" hidden>
+      <header class="counter-heading">
+        <h2>คำนวณจำนวนคนและยอดเงิน</h2>
+        <p>กรอกจำนวนคน แล้วยอดจะคำนวณให้ทันที</p>
+      </header>
+
+      <section class="daily-glance" aria-label="สรุปยอดใช้บริการวันนี้">
+        <div class="daily-glance-top"><span><span class="daily-glance-title">📊 สรุปวันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
+        <div class="daily-glance-values">
+          <div class="daily-glance-card"><span>👥 ผู้เข้าชมวันนี้</span><strong id="counter-today-people">0 คน</strong></div>
+          <div class="daily-glance-card"><span>💰 ยอดเงินวันนี้</span><strong id="counter-today-money">0 บาท</strong></div>
+        </div>
+        <div class="daily-glance-actions">
+          <button class="tab-link" type="button" data-view="ticket-page">🎟️ หน้าเลขตั๋ว</button>
+          <button class="pdf-button" id="print-daily" type="button">📄 บันทึก PDF</button>
+        </div>
+      </section>
+
+      <section class="counter-cards" aria-label="จำนวนคนแยกตามประเภทตั๋ว">
+        <article class="counter-card" data-price="40">
+          <div class="card-heading"><h3>นักศึกษา นักเรียน บุคลากร</h3><span class="price-tag">40 บาท</span></div>
+          <div class="field"><label for="counter-40">จำนวนคน</label><input id="counter-40" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+          <div class="counter-amount"><span>ยอดเงิน</span><strong id="entry-amount-40">0 บาท</strong></div>
+        </article>
+        <article class="counter-card" data-price="60">
+          <div class="card-heading"><h3>ผู้ใหญ่</h3><span class="price-tag">60 บาท</span></div>
+          <div class="field"><label for="counter-60">จำนวนคน</label><input id="counter-60" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+          <div class="counter-amount"><span>ยอดเงิน</span><strong id="entry-amount-60">0 บาท</strong></div>
+        </article>
+        <article class="counter-card" data-price="100">
+          <div class="card-heading"><h3>เด็กต่างชาติ</h3><span class="price-tag">100 บาท</span></div>
+          <div class="field"><label for="counter-100">จำนวนคน</label><input id="counter-100" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+          <div class="counter-amount"><span>ยอดเงิน</span><strong id="entry-amount-100">0 บาท</strong></div>
+        </article>
+        <article class="counter-card" data-price="150">
+          <div class="card-heading"><h3>ผู้ใหญ่ต่างชาติ</h3><span class="price-tag">150 บาท</span></div>
+          <div class="field"><label for="counter-150">จำนวนคน</label><input id="counter-150" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
+          <div class="counter-amount"><span>ยอดเงิน</span><strong id="entry-amount-150">0 บาท</strong></div>
+        </article>
+      </section>
+
+      <section class="free-entry" aria-label="จำนวนผู้เข้าชมฟรีแยกตามประเภท">
+        <div class="free-heading"><strong>เข้าฟรี</strong><span>ระบุจำนวนแยกตามประเภท · ไม่คิดเงิน</span></div>
+        <div class="free-count-grid">
+          <label class="free-count-option" for="counter-free-short"><span>เด็กต่ำกว่า 120 ซม.</span><input id="counter-free-short" class="counter-input free-count-input" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="จำนวนเด็กต่ำกว่า 120 เซนติเมตร"></label>
+          <label class="free-count-option" for="counter-free-disabled"><span>ผู้พิการ</span><input id="counter-free-disabled" class="counter-input free-count-input" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="จำนวนผู้พิการเข้าฟรี"></label>
+          <label class="free-count-option" for="counter-free-monk"><span>ภิกษุ</span><input id="counter-free-monk" class="counter-input free-count-input" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="จำนวนภิกษุเข้าฟรี"></label>
+          <label class="free-count-option" for="counter-free-other"><span>ยกเว้นอื่นๆ</span><input id="counter-free-other" class="counter-input free-count-input" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="จำนวนผู้ได้รับยกเว้นอื่นๆ"></label>
+        </div>
+        <label class="legacy-free-entry" id="legacy-free-entry" for="counter-free-legacy" hidden>
+          <span>ยอดเดิมที่ยังไม่แยกประเภท</span>
+          <input id="counter-free-legacy" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="ยอดฟรีเดิมที่ยังไม่แยกประเภท">
+        </label>
+      </section>
+
+      <section class="counter-total-grid entry-total-grid" aria-label="ยอดของจำนวนที่กรอก">
+        <div class="counter-total-card"><span>👥 จำนวนคนรวมรอบนี้</span><strong id="entry-total-people">0 คน</strong></div>
+        <div class="counter-total-card"><span>💰 ยอดเงินรอบนี้</span><strong id="entry-total-money">0 บาท</strong></div>
+      </section>
+      <p class="counter-note" id="counter-entry-note" aria-live="polite">ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดเทียบวันนี้</p>
+      <div class="counter-actions">
+        <button class="calculate" id="record-counter" type="button">บันทึกยอดเข้ารวมวันนี้</button>
+        <button class="reset" id="clear-counter-entry" type="button">ล้างจำนวนที่กรอก</button>
+      </div>
+
+      <section class="daily-summary" aria-labelledby="daily-summary-title">
+        <div class="daily-summary-top"><h2 id="daily-summary-title">สรุปเทียบยอดวันนี้</h2></div>
+        <div class="daily-quick-stack"><span class="daily-quick" id="daily-quick-total">ตั๋ว — ใบ · คนชำระ 0 คน · ผลต่าง —</span><span class="daily-quick-sub" id="daily-quick-visitors">เข้าฟรี 0 คน · รวมเข้าชม 0 คน</span><span class="daily-quick-sub" id="daily-money-quick">ยอดตั๋ว — บาท · เคาน์เตอร์ 0 บาท · ผลต่าง —</span></div>
+        <p class="daily-date" id="daily-date"></p>
+        <details class="daily-details">
+          <summary>ดูจำนวนตั๋วและคนเข้าแยกประเภท</summary>
+          <div class="daily-table" role="table" aria-label="เปรียบเทียบตั๋วขายกับคนเข้าตามประเภท">
+            <div class="daily-row daily-head" role="row"><span role="columnheader">ประเภท</span><span role="columnheader">ตั๋วขาย</span><span role="columnheader">คนเข้า</span><span role="columnheader">ผลต่าง</span></div>
+            <div class="daily-row" data-price="40" role="row"><span role="cell"><span class="daily-type">นักศึกษา นักเรียน บุคลากร</span><small class="daily-money" id="daily-money-40">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-40" role="cell">—</span><span id="daily-people-40" role="cell">0 คน</span><span id="daily-difference-40" role="cell">—</span></div>
+            <div class="daily-row" data-price="60" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่</span><small class="daily-money" id="daily-money-60">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-60" role="cell">—</span><span id="daily-people-60" role="cell">0 คน</span><span id="daily-difference-60" role="cell">—</span></div>
+            <div class="daily-row" data-price="100" role="row"><span role="cell"><span class="daily-type">เด็กต่างชาติ</span><small class="daily-money" id="daily-money-100">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-100" role="cell">—</span><span id="daily-people-100" role="cell">0 คน</span><span id="daily-difference-100" role="cell">—</span></div>
+            <div class="daily-row" data-price="150" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่ต่างชาติ</span><small class="daily-money" id="daily-money-150">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-150" role="cell">—</span><span id="daily-people-150" role="cell">0 คน</span><span id="daily-difference-150" role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">เด็กต่ำกว่า 120 ซม.</span><span role="cell">—</span><span id="daily-people-free-short" role="cell">0 คน</span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ผู้พิการ</span><span role="cell">—</span><span id="daily-people-free-disabled" role="cell">0 คน</span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ภิกษุ</span><span role="cell">—</span><span id="daily-people-free-monk" role="cell">0 คน</span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ยกเว้นอื่นๆ</span><span role="cell">—</span><span id="daily-people-free-other" role="cell">0 คน</span><span role="cell">—</span></div>
+            <div class="daily-row" id="daily-row-free-legacy" data-price="free" role="row" hidden><span class="daily-type" role="cell">ยอดเดิมที่ยังไม่แยกประเภท</span><span role="cell">—</span><span id="daily-people-free-legacy" role="cell">0 คน</span><span role="cell">—</span></div>
+          </div>
+          <section class="counter-total-grid" aria-label="ยอดสะสมวันนี้">
+            <div class="counter-total-card"><span>จำนวนคนรวมวันนี้</span><strong id="daily-total-people">0 คน</strong></div>
+            <div class="counter-total-card"><span>ยอดเงินรวมวันนี้</span><strong id="daily-total-money">0 บาท</strong></div>
+          </section>
+          <p class="counter-note">ยอดที่บันทึกจะจำไว้ในเบราว์เซอร์นี้ และแยกตามวันที่</p>
+          <div class="daily-actions">
+            <button class="reset" id="reset-daily" type="button">ล้างยอดวันนี้ เริ่มวันใหม่</button>
+          </div>
+        </details>
+      </section>
+
+      <section id="daily-report" class="print-report" aria-label="รายงานยอดใช้บริการพิพิธภัณฑ์ประจำวัน">
+        <header>
+          <p class="report-kicker">รายงานสรุปประจำวัน</p>
+          <h1>ยอดใช้บริการพิพิธภัณฑ์ประจำวัน</h1>
+          <time id="report-date"></time>
+        </header>
+        <div class="report-stat-grid">
+          <div class="report-stat"><span>🎟️ ตั๋วขาย</span><strong id="report-total-tickets">— ใบ</strong></div>
+          <div class="report-stat"><span>👥 ผู้ชำระเงิน</span><strong id="report-paid-visitors">0 คน</strong></div>
+          <div class="report-stat"><span>🆓 ผู้เข้าฟรี</span><strong id="report-free-visitors">0 คน</strong></div>
+          <div class="report-stat"><span>👨‍👩‍👧 ผู้เข้าชมรวม</span><strong id="report-all-visitors">0 คน</strong></div>
+          <div class="report-stat"><span>💰 ยอดหน้าเคาน์เตอร์</span><strong id="report-cash-total">0 บาท</strong></div>
+          <div class="report-stat"><span>🧾 ยอดจากเลขตั๋ว</span><strong id="report-ticket-sales">— บาท</strong></div>
+        </div>
+        <h2>เปรียบเทียบตั๋วขายกับคนชำระเงิน</h2>
+        <table class="report-table">
+          <thead><tr><th>ประเภทตั๋ว</th><th>ตั๋วขาย</th><th>คนชำระ</th><th>ผลต่าง</th><th>ยอดตั๋ว</th><th>ยอดเคาน์เตอร์</th></tr></thead>
+          <tbody>
+            <tr><td>นักศึกษา นักเรียน บุคลากร · 40 บาท</td><td id="report-tickets-40">—</td><td id="report-people-40">0</td><td id="report-difference-40">—</td><td id="report-ticket-money-40">—</td><td id="report-counter-money-40">0</td></tr>
+            <tr><td>ผู้ใหญ่ · 60 บาท</td><td id="report-tickets-60">—</td><td id="report-people-60">0</td><td id="report-difference-60">—</td><td id="report-ticket-money-60">—</td><td id="report-counter-money-60">0</td></tr>
+            <tr><td>เด็กต่างชาติ · 100 บาท</td><td id="report-tickets-100">—</td><td id="report-people-100">0</td><td id="report-difference-100">—</td><td id="report-ticket-money-100">—</td><td id="report-counter-money-100">0</td></tr>
+            <tr><td>ผู้ใหญ่ต่างชาติ · 150 บาท</td><td id="report-tickets-150">—</td><td id="report-people-150">0</td><td id="report-difference-150">—</td><td id="report-ticket-money-150">—</td><td id="report-counter-money-150">0</td></tr>
+          </tbody>
+        </table>
+        <h2>ผู้เข้าชมฟรีแยกประเภท</h2>
+        <table class="report-table">
+          <thead><tr><th>ประเภท</th><th>จำนวนคน</th></tr></thead>
+          <tbody>
+            <tr><td>เด็กต่ำกว่า 120 ซม.</td><td id="report-free-short">0</td></tr>
+            <tr><td>ผู้พิการ</td><td id="report-free-disabled">0</td></tr>
+            <tr><td>ภิกษุ</td><td id="report-free-monk">0</td></tr>
+            <tr><td>ยกเว้นอื่นๆ</td><td id="report-free-other">0</td></tr>
+            <tr id="report-free-legacy-row" hidden><td>ยอดเดิมที่ยังไม่แยกประเภท</td><td id="report-free-legacy">0</td></tr>
+          </tbody>
+        </table>
+        <p class="report-note" id="report-comparison-note">การเทียบจำนวนตั๋วกับคนชำระเงินจะแสดงหลังอัปเดตยอดตั๋ววันนี้</p>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const storageKey = "ticket-sales-calculator-v1";
+      const perBookInput = document.getElementById("per-book");
+      const cards = [...document.querySelectorAll(".ticket-card")];
+      const totalTicketsEl = document.getElementById("total-tickets");
+      const totalSalesEl = document.getElementById("total-sales");
+      const summaryNoteEl = document.getElementById("summary-note");
+      const numberFormat = new Intl.NumberFormat("th-TH");
+
+      const counterPrices = [40, 60, 100, 150];
+      const freeCategories = [
+        { key: "freeShort", inputId: "counter-free-short", dailyId: "daily-people-free-short" },
+        { key: "freeDisabled", inputId: "counter-free-disabled", dailyId: "daily-people-free-disabled" },
+        { key: "freeMonk", inputId: "counter-free-monk", dailyId: "daily-people-free-monk" },
+        { key: "freeOther", inputId: "counter-free-other", dailyId: "daily-people-free-other" },
+      ];
+      function emptyTicketCounts() {
+        return Object.fromEntries(counterPrices.map(price => [String(price), 0]));
+      }
+      function localDateKey() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      }
+      function emptyDailyCounts() {
+        return {
+          ...Object.fromEntries(counterPrices.map(price => [String(price), 0])),
+          ...Object.fromEntries(freeCategories.map(category => [category.key, 0])),
+          freeLegacy: 0,
+        };
+      }
+      let dailyDate = localDateKey();
+      let dailyCounts = emptyDailyCounts();
+      let dailyTicketCounts = emptyTicketCounts();
+      let dailyTicketCountsRecorded = false;
+
+      function refreshDayIfNeeded() {
+        const currentDate = localDateKey();
+        if (currentDate === dailyDate) return false;
+        dailyDate = currentDate;
+        dailyCounts = emptyDailyCounts();
+        dailyTicketCounts = emptyTicketCounts();
+        dailyTicketCountsRecorded = false;
+        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
+        document.getElementById("legacy-free-entry").hidden = true;
+        return true;
+      }
+
+      function save() {
+        refreshDayIfNeeded();
+        const data = {
+          perBook: perBookInput.value,
+          prices: {},
+          daily: {
+            date: dailyDate,
+            counts: { ...dailyCounts },
+            tickets: { ...dailyTicketCounts },
+            ticketCountsRecorded: dailyTicketCountsRecorded,
+          },
+          counterDraft: {},
+        };
+        for (const card of cards) {
+          const price = card.dataset.price;
+          data.prices[price] = {};
+          for (const input of card.querySelectorAll("[data-field]")) {
+            data.prices[price][input.dataset.field] = input.value;
+          }
+        }
+        for (const price of counterPrices) {
+          const input = document.getElementById(`counter-${price}`);
+          data.counterDraft[String(price)] = input ? input.value : "0";
+        }
+        for (const category of freeCategories) {
+          const input = document.getElementById(category.inputId);
+          data.counterDraft[category.key] = input ? input.value : "0";
+        }
+        data.counterDraft.freeLegacy = document.getElementById("counter-free-legacy").value;
+        try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (_) {}
+      }
+
+      function restore() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+          if (!saved) return;
+          const currentDate = localDateKey();
+          dailyDate = currentDate;
+          const sameDay = saved.daily && saved.daily.date === currentDate;
+          if (sameDay && saved.daily.counts) {
+            for (const price of counterPrices) {
+              const count = Number(saved.daily.counts[String(price)] || 0);
+              dailyCounts[String(price)] = Number.isInteger(count) && count >= 0 ? count : 0;
+            }
+            for (const category of freeCategories) {
+              const count = Number(saved.daily.counts[category.key] || 0);
+              dailyCounts[category.key] = Number.isInteger(count) && count >= 0 ? count : 0;
+            }
+            // Retain aggregate-free totals saved by earlier versions without assigning them a reason.
+            const legacyFreeCount = Number(saved.daily.counts.freeLegacy ?? saved.daily.counts.free ?? 0);
+            dailyCounts.freeLegacy = Number.isInteger(legacyFreeCount) && legacyFreeCount >= 0 ? legacyFreeCount : 0;
+            if (saved.daily.tickets) {
+              for (const price of counterPrices) {
+                const count = Number(saved.daily.tickets[String(price)] || 0);
+                dailyTicketCounts[String(price)] = Number.isInteger(count) && count >= 0 ? count : 0;
+              }
+              dailyTicketCountsRecorded = saved.daily.ticketCountsRecorded !== false;
+            }
+          }
+          if (saved.perBook !== undefined && saved.perBook !== "") perBookInput.value = saved.perBook;
+          for (const card of cards) {
+            const values = saved.prices && saved.prices[card.dataset.price];
+            if (!values) continue;
+            for (const input of card.querySelectorAll("[data-field]")) {
+              input.value = values[input.dataset.field] || "";
+            }
+          }
+          if (sameDay && saved.counterDraft) {
+            for (const price of counterPrices) {
+              const input = document.getElementById(`counter-${price}`);
+              const value = saved.counterDraft[String(price)];
+              if (input && value !== undefined) input.value = value;
+            }
+            for (const category of freeCategories) {
+              const input = document.getElementById(category.inputId);
+              const value = saved.counterDraft[category.key];
+              if (input && value !== undefined) input.value = value;
+            }
+            const legacyDraft = saved.counterDraft.freeLegacy ?? saved.counterDraft.free;
+            if (legacyDraft !== undefined) {
+              const legacyInput = document.getElementById("counter-free-legacy");
+              legacyInput.value = legacyDraft;
+              document.getElementById("legacy-free-entry").hidden = !(Number(legacyDraft) > 0);
+            }
+          }
+        } catch (_) {}
+      }
+
+      function renderDailySummary() {
+        if (refreshDayIfNeeded()) save();
+        const dateText = new Intl.DateTimeFormat("th-TH", {
+          weekday: "long", day: "numeric", month: "long", year: "numeric",
+        }).format(new Date());
+        document.getElementById("daily-date").textContent = `ประจำวันที่ ${dateText}`;
+        let totalPeople = 0;
+        let totalMoney = 0;
+        let totalTicketMoney = 0;
+        let paidPeople = 0;
+        let totalTickets = 0;
+        let mismatchedTypes = 0;
+        for (const price of counterPrices) {
+          const count = dailyCounts[String(price)] || 0;
+          const amount = count * price;
+          const ticketCount = dailyTicketCounts[String(price)] || 0;
+          const ticketAmount = ticketCount * price;
+          const difference = ticketCount - count;
+          if (dailyTicketCountsRecorded && difference !== 0) mismatchedTypes++;
+          totalPeople += count;
+          paidPeople += count;
+          totalMoney += amount;
+          totalTicketMoney += ticketAmount;
+          totalTickets += ticketCount;
+          document.getElementById(`daily-people-${price}`).textContent = `${numberFormat.format(count)} คน`;
+          document.getElementById(`daily-money-${price}`).textContent = `ตั๋ว ${dailyTicketCountsRecorded ? numberFormat.format(ticketAmount) : "—"} · คนเข้า ${numberFormat.format(amount)} บาท`;
+          document.getElementById(`daily-tickets-${price}`).textContent = dailyTicketCountsRecorded ? numberFormat.format(ticketCount) : "—";
+          const differenceEl = document.getElementById(`daily-difference-${price}`);
+          differenceEl.textContent = dailyTicketCountsRecorded
+            ? difference === 0 ? "ตรง" : `${difference > 0 ? "+" : "−"}${numberFormat.format(Math.abs(difference))}`
+            : "—";
+          differenceEl.className = dailyTicketCountsRecorded ? `daily-difference ${difference === 0 ? "match" : "mismatch"}` : "daily-difference";
+        }
+        let freePeople = 0;
+        for (const category of freeCategories) {
+          const count = dailyCounts[category.key] || 0;
+          totalPeople += count;
+          freePeople += count;
+          document.getElementById(category.dailyId).textContent = `${numberFormat.format(count)} คน`;
+        }
+        const legacyFreeCount = dailyCounts.freeLegacy || 0;
+        document.getElementById("daily-people-free-legacy").textContent = `${numberFormat.format(legacyFreeCount)} คน`;
+        document.getElementById("daily-row-free-legacy").hidden = legacyFreeCount === 0;
+        totalPeople += legacyFreeCount;
+        freePeople += legacyFreeCount;
+        document.getElementById("daily-total-people").textContent = `${numberFormat.format(totalPeople)} คน`;
+        document.getElementById("daily-total-money").textContent = `${numberFormat.format(totalMoney)} บาท`;
+        const difference = totalTickets - paidPeople;
+        const moneyDifference = totalTicketMoney - totalMoney;
+        const differenceText = !dailyTicketCountsRecorded
+          ? "ยังไม่เทียบ"
+          : mismatchedTypes === 0 ? "ตรงทุกประเภท" : difference === 0
+            ? `รวมตรง · ${numberFormat.format(mismatchedTypes)} ประเภทต่าง`
+            : `${difference > 0 ? "ตั๋วเกิน" : "คนเกิน"} ${numberFormat.format(Math.abs(difference))} · ${numberFormat.format(mismatchedTypes)} ประเภทต่าง`;
+        const moneyDifferenceText = !dailyTicketCountsRecorded
+          ? "ยังไม่เทียบ"
+          : moneyDifference === 0 ? "ตรงกัน" : `${moneyDifference > 0 ? "ตั๋วเกิน" : "เคาน์เตอร์เกิน"} ${numberFormat.format(Math.abs(moneyDifference))} บาท`;
+        const dailyQuick = document.getElementById("daily-quick-total");
+        dailyQuick.textContent = dailyTicketCountsRecorded
+          ? `ตั๋วขาย ${numberFormat.format(totalTickets)} ใบ · คนชำระ ${numberFormat.format(paidPeople)} คน · ${differenceText}`
+          : `ตั๋วยังไม่อัปเดต · คนชำระ ${numberFormat.format(paidPeople)} คน`;
+        dailyQuick.className = dailyTicketCountsRecorded ? `daily-quick ${mismatchedTypes === 0 ? "match" : "mismatch"}` : "daily-quick";
+        document.getElementById("daily-quick-visitors").textContent = `เข้าฟรี ${numberFormat.format(freePeople)} คน · รวมเข้าชม ${numberFormat.format(totalPeople)} คน`;
+        const dailyMoneyQuick = document.getElementById("daily-money-quick");
+        dailyMoneyQuick.textContent = dailyTicketCountsRecorded
+          ? `ยอดตั๋ว ${numberFormat.format(totalTicketMoney)} บาท · เคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท · ${moneyDifferenceText}`
+          : `ยอดตั๋วยังไม่อัปเดต · เคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท`;
+        dailyMoneyQuick.className = dailyTicketCountsRecorded ? `daily-quick-sub ${moneyDifference === 0 ? "match" : "mismatch"}` : "daily-quick-sub";
+
+        document.getElementById("ticket-today-total").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTickets)} ใบ` : "— ใบ";
+        document.getElementById("paid-attendance-total").textContent = `${numberFormat.format(paidPeople)} คน`;
+        const differenceEl = document.getElementById("ticket-attendance-difference");
+        differenceEl.textContent = dailyTicketCountsRecorded
+          ? `${difference > 0 ? "+" : difference < 0 ? "−" : ""}${numberFormat.format(Math.abs(difference))} ใบ${mismatchedTypes > 0 ? ` · ${numberFormat.format(mismatchedTypes)} ประเภท` : ""}`
+          : "—";
+        differenceEl.className = dailyTicketCountsRecorded ? (mismatchedTypes === 0 ? "match" : "mismatch") : "";
+        const matchStatus = document.getElementById("ticket-match-status");
+        matchStatus.className = "comparison-status";
+        if (!dailyTicketCountsRecorded) {
+          matchStatus.textContent = "กด “คำนวณและอัปเดตยอดตั๋ววันนี้” เพื่อเริ่มเทียบกับจำนวนคนในหน้าเคาน์เตอร์";
+        } else if (mismatchedTypes === 0) {
+          matchStatus.textContent = "จำนวนตั๋วและคนชำระตรงกันครบทุกประเภท";
+          matchStatus.classList.add("match");
+        } else {
+          matchStatus.textContent = difference === 0
+            ? `ยอดรวมเท่ากัน แต่มี ${numberFormat.format(mismatchedTypes)} ประเภทที่จำนวนไม่ตรง`
+            : `${difference > 0 ? `ตั๋วมากกว่าคน ${numberFormat.format(difference)} ใบ` : `คนมากกว่าตั๋ว ${numberFormat.format(Math.abs(difference))} คน`} · จำนวนไม่ตรง ${numberFormat.format(mismatchedTypes)} ประเภท`;
+          matchStatus.classList.add("mismatch");
+        }
+        document.getElementById("ticket-visitor-total").textContent = `เข้าฟรี ${numberFormat.format(freePeople)} คน · ผู้เข้าชมรวม ${numberFormat.format(totalPeople)} คน`;
+        const moneyComparison = document.getElementById("ticket-money-comparison");
+        moneyComparison.textContent = dailyTicketCountsRecorded
+          ? `ยอดขายจากตั๋ว ${numberFormat.format(totalTicketMoney)} บาท · ยอดหน้าเคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท · ${moneyDifferenceText}`
+          : `ยอดขายจากตั๋วยังไม่อัปเดต · ยอดหน้าเคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท`;
+        moneyComparison.className = dailyTicketCountsRecorded ? `comparison-visitors ${moneyDifference === 0 ? "match" : "mismatch"}` : "comparison-visitors";
+
+        document.getElementById("counter-today-people").textContent = `${numberFormat.format(totalPeople)} คน`;
+        document.getElementById("counter-today-money").textContent = `${numberFormat.format(totalMoney)} บาท`;
+        document.getElementById("counter-today-date").textContent = dateText;
+        const todayStatus = document.getElementById("counter-today-status");
+        todayStatus.className = "daily-glance-status";
+        if (!dailyTicketCountsRecorded) {
+          todayStatus.textContent = "ยังไม่เทียบยอดตั๋ว";
+        } else if (mismatchedTypes === 0) {
+          todayStatus.textContent = "✓ ตั๋วตรงกับคนชำระ";
+          todayStatus.classList.add("match");
+        } else {
+          todayStatus.textContent = `⚠ ต่าง ${numberFormat.format(mismatchedTypes)} ประเภท`;
+          todayStatus.classList.add("mismatch");
+        }
+
+        document.getElementById("report-date").textContent = `ประจำวันที่ ${dateText}`;
+        document.getElementById("report-total-tickets").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTickets)} ใบ` : "ยังไม่อัปเดต";
+        document.getElementById("report-paid-visitors").textContent = `${numberFormat.format(paidPeople)} คน`;
+        document.getElementById("report-free-visitors").textContent = `${numberFormat.format(freePeople)} คน`;
+        document.getElementById("report-all-visitors").textContent = `${numberFormat.format(totalPeople)} คน`;
+        document.getElementById("report-cash-total").textContent = `${numberFormat.format(totalMoney)} บาท`;
+        document.getElementById("report-ticket-sales").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTicketMoney)} บาท` : "ยังไม่อัปเดต";
+        for (const price of counterPrices) {
+          const count = dailyCounts[String(price)] || 0;
+          const ticketCount = dailyTicketCounts[String(price)] || 0;
+          const amount = count * price;
+          const ticketAmount = ticketCount * price;
+          const differenceCount = ticketCount - count;
+          document.getElementById(`report-tickets-${price}`).textContent = dailyTicketCountsRecorded ? numberFormat.format(ticketCount) : "—";
+          document.getElementById(`report-people-${price}`).textContent = numberFormat.format(count);
+          const reportDifference = document.getElementById(`report-difference-${price}`);
+          reportDifference.textContent = dailyTicketCountsRecorded
+            ? differenceCount === 0 ? "ตรง" : `${differenceCount > 0 ? "+" : "−"}${numberFormat.format(Math.abs(differenceCount))}`
+            : "—";
+          reportDifference.className = dailyTicketCountsRecorded ? (differenceCount === 0 ? "report-match" : "report-mismatch") : "";
+          document.getElementById(`report-ticket-money-${price}`).textContent = dailyTicketCountsRecorded ? `${numberFormat.format(ticketAmount)} บาท` : "—";
+          document.getElementById(`report-counter-money-${price}`).textContent = `${numberFormat.format(amount)} บาท`;
+        }
+        for (const category of freeCategories) {
+          const suffix = category.key.slice("free".length).toLowerCase();
+          document.getElementById(`report-free-${suffix}`).textContent = numberFormat.format(dailyCounts[category.key] || 0);
+        }
+        document.getElementById("report-free-legacy").textContent = numberFormat.format(legacyFreeCount);
+        document.getElementById("report-free-legacy-row").hidden = legacyFreeCount === 0;
+        document.getElementById("report-comparison-note").textContent = dailyTicketCountsRecorded
+          ? `ผลเทียบจำนวน: ${differenceText} · ผลเทียบยอดเงิน: ${moneyDifferenceText} · จำนวนเข้าชมรวมรวมผู้เข้าฟรี`
+          : "ยังไม่ได้อัปเดตยอดจากหน้าเลขตั๋ว จึงยังเปรียบเทียบจำนวนตั๋วกับคนชำระเงินไม่ได้";
+      }
+
+      function updateCounter() {
+        let totalPeople = 0;
+        let totalMoney = 0;
+        let valid = true;
+        const counts = {};
+        for (const price of counterPrices) {
+          const input = document.getElementById(`counter-${price}`);
+          const raw = input.value.trim();
+          const count = raw === "" ? 0 : Number(raw);
+          if (!Number.isInteger(count) || count < 0) {
+            valid = false;
+            counts[String(price)] = 0;
+            document.getElementById(`entry-amount-${price}`).textContent = "ตรวจจำนวนคน";
+            continue;
+          }
+          const amount = count * price;
+          counts[String(price)] = count;
+          totalPeople += count;
+          totalMoney += amount;
+          document.getElementById(`entry-amount-${price}`).textContent = `${numberFormat.format(amount)} บาท`;
+        }
+        const freeCounts = {};
+        for (const category of freeCategories) {
+          const raw = document.getElementById(category.inputId).value.trim();
+          const count = raw === "" ? 0 : Number(raw);
+          if (!Number.isInteger(count) || count < 0) valid = false;
+          else totalPeople += count;
+          freeCounts[category.key] = Number.isInteger(count) && count >= 0 ? count : 0;
+        }
+        const legacyRaw = document.getElementById("counter-free-legacy").value.trim();
+        const legacyFreeCount = legacyRaw === "" ? 0 : Number(legacyRaw);
+        if (!Number.isInteger(legacyFreeCount) || legacyFreeCount < 0) valid = false;
+        else totalPeople += legacyFreeCount;
+        if (legacyRaw !== "" && legacyRaw !== "0") document.getElementById("legacy-free-entry").hidden = false;
+        else if (document.activeElement.id !== "counter-free-legacy") document.getElementById("legacy-free-entry").hidden = true;
+        document.getElementById("entry-total-people").textContent = valid ? `${numberFormat.format(totalPeople)} คน` : "—";
+        document.getElementById("entry-total-money").textContent = valid ? `${numberFormat.format(totalMoney)} บาท` : "—";
+        const note = document.getElementById("counter-entry-note");
+        note.className = valid ? "counter-note" : "counter-note error";
+        note.textContent = valid ? "ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดเทียบวันนี้" : "จำนวนคนต้องเป็นจำนวนเต็มตั้งแต่ 0 ขึ้นไป";
+        renderDailySummary();
+        return {
+          valid, totalPeople, totalMoney, counts, freeCounts,
+          freeLegacy: Number.isInteger(legacyFreeCount) && legacyFreeCount >= 0 ? legacyFreeCount : 0,
+        };
+      }
+      function readCard(card, perBook) {
+        const price = Number(card.dataset.price);
+        const fields = Object.fromEntries([...card.querySelectorAll("[data-field]")].map(input => [input.dataset.field, input.value.trim()]));
+        const values = Object.fromEntries(Object.entries(fields).map(([key, value]) => [key, value === "" ? null : Number(value)]));
+        const filled = Object.values(fields).filter(value => value !== "").length;
+        const statusEl = document.getElementById(`status-${price}`);
+        statusEl.className = "card-status";
+
+        if (filled === 0) {
+          statusEl.textContent = "รอกรอกข้อมูล";
+          return { kind: "empty", price };
+        }
+        if (filled < 4) {
+          statusEl.textContent = "กรอกข้อมูลให้ครบทั้ง 4 ช่อง";
+          statusEl.classList.add("error");
+          return { kind: "incomplete", price };
+        }
+
+        const { bookStart, ticketStart, bookEnd, ticketEnd } = values;
+        const wholePositive = [bookStart, ticketStart, bookEnd, ticketEnd].every(value => Number.isInteger(value) && value > 0);
+        const ordered = bookEnd > bookStart || (bookEnd === bookStart && ticketEnd >= ticketStart);
+        const validTicketNumbers = ticketStart <= perBook && ticketEnd <= perBook;
+        if (!wholePositive || !ordered || !validTicketNumbers) {
+          statusEl.textContent = `ตรวจสอบช่วงเล่มและเลขตั๋ว (เลขตั๋วต้องอยู่ระหว่าง 1–${numberFormat.format(perBook)})`;
+          statusEl.classList.add("error");
+          return { kind: "invalid", price };
+        }
+
+        const count = (bookEnd - bookStart) * perBook + ticketEnd - ticketStart + 1;
+        const amount = count * price;
+        statusEl.textContent = `${numberFormat.format(count)} ใบ · ${numberFormat.format(amount)} บาท`;
+        statusEl.classList.add("ready");
+        return { kind: "ready", price, count, amount };
+      }
+
+      function calculate() {
+        const perBook = Number(perBookInput.value);
+        const perBookValid = Number.isInteger(perBook) && perBook > 0;
+        if (!perBookValid) {
+          totalTicketsEl.textContent = "—";
+          totalSalesEl.textContent = "—";
+          summaryNoteEl.textContent = "จำนวนตั๋วต่อเล่มต้องเป็นจำนวนเต็มตั้งแต่ 1 ใบขึ้นไป";
+          summaryNoteEl.className = "error";
+          for (const card of cards) {
+            const statusEl = document.getElementById(`status-${card.dataset.price}`);
+            statusEl.textContent = "ตรวจจำนวนตั๋วต่อเล่ม";
+            statusEl.className = "card-status error";
+          }
+          return { valid: false, hasData: false, counts: emptyTicketCounts() };
+        }
+
+        const results = cards.map(card => readCard(card, perBook));
+        const active = results.filter(result => result.kind !== "empty");
+        const ready = results.filter(result => result.kind === "ready");
+        const incompleteCount = results.filter(result => result.kind === "incomplete").length;
+        const invalidCount = results.filter(result => result.kind === "invalid").length;
+
+        if (active.length === 0) {
+          totalTicketsEl.textContent = "—";
+          totalSalesEl.textContent = "—";
+          summaryNoteEl.textContent = "กรอกช่วงเลขตั๋วอย่างน้อยหนึ่งประเภท";
+          summaryNoteEl.className = "";
+          return { valid: false, hasData: false, counts: emptyTicketCounts() };
+        }
+
+        const ticketTotal = ready.reduce((sum, result) => sum + result.count, 0);
+        const salesTotal = ready.reduce((sum, result) => sum + result.amount, 0);
+        totalTicketsEl.textContent = `${numberFormat.format(ticketTotal)} ใบ`;
+        totalSalesEl.textContent = `${numberFormat.format(salesTotal)} บาท`;
+
+        const issues = [];
+        if (incompleteCount) issues.push(`${incompleteCount} ประเภท กรอกข้อมูลไม่ครบ`);
+        if (invalidCount) issues.push(`${invalidCount} ประเภท ช่วงเลขไม่ถูกต้อง`);
+        if (issues.length) {
+          summaryNoteEl.textContent = `ยอดรวมนี้นับเฉพาะรายการที่กรอกครบและถูกต้อง โปรดตรวจสอบ: ${issues.join(" · ")}`;
+          summaryNoteEl.className = "error";
+        } else {
+          summaryNoteEl.textContent = "คำนวณครบตามรายการที่กรอก";
+          summaryNoteEl.className = "";
+        }
+        const counts = Object.fromEntries(results.map(result => [
+          String(result.price), result.kind === "ready" ? result.count : 0,
+        ]));
+        return {
+          valid: incompleteCount === 0 && invalidCount === 0,
+          hasData: ready.length > 0,
+          counts,
+        };
+      }
+
+      for (const input of document.querySelectorAll("#ticket-page input")) {
+        input.addEventListener("input", () => { save(); calculate(); });
+      }
+      for (const input of document.querySelectorAll(".counter-input")) {
+        input.addEventListener("input", () => { save(); updateCounter(); });
+      }
+      for (const input of document.querySelectorAll('input[type="number"]')) {
+        input.addEventListener("wheel", event => {
+          if (document.activeElement === input) event.preventDefault();
+        }, { passive: false });
+      }
+      for (const tab of document.querySelectorAll("[data-view]")) {
+        tab.addEventListener("click", () => {
+          const view = tab.dataset.view;
+          document.body.classList.toggle("counter-view", view === "counter-page");
+          for (const button of document.querySelectorAll(".tab-button")) {
+            const active = button.dataset.view === view;
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-pressed", String(active));
+            document.getElementById(button.dataset.view).hidden = !active;
+          }
+        });
+      }
+      document.getElementById("calculate").addEventListener("click", () => {
+        const result = calculate();
+        if (!result.valid || !result.hasData) return;
+        dailyTicketCounts = { ...result.counts };
+        dailyTicketCountsRecorded = true;
+        save();
+        renderDailySummary();
+      });
+      document.getElementById("reset").addEventListener("click", () => {
+        if (!window.confirm("ล้างเลขตั๋วที่กรอกทั้งหมดหรือไม่?")) return;
+        for (const card of cards) {
+          for (const input of card.querySelectorAll("[data-field]")) input.value = "";
+        }
+        save();
+        calculate();
+      });
+      document.getElementById("record-counter").addEventListener("click", () => {
+        const entry = updateCounter();
+        if (!entry.valid) return;
+        if (entry.totalPeople === 0) {
+          const note = document.getElementById("counter-entry-note");
+          note.className = "counter-note error";
+          note.textContent = "กรอกจำนวนคนอย่างน้อยหนึ่งประเภท ก่อนบันทึกยอดวันนี้";
+          return;
+        }
+        refreshDayIfNeeded();
+        for (const price of counterPrices) {
+          const input = document.getElementById(`counter-${price}`);
+          dailyCounts[String(price)] += entry.counts[String(price)];
+          input.value = "0";
+        }
+        for (const category of freeCategories) {
+          dailyCounts[category.key] += entry.freeCounts[category.key];
+          document.getElementById(category.inputId).value = "0";
+        }
+        dailyCounts.freeLegacy += entry.freeLegacy;
+        document.getElementById("counter-free-legacy").value = "0";
+        document.getElementById("legacy-free-entry").hidden = true;
+        save();
+        updateCounter();
+        const note = document.getElementById("counter-entry-note");
+        note.className = "counter-note success";
+        note.textContent = `บันทึกเพิ่ม ${numberFormat.format(entry.totalPeople)} คน รวม ${numberFormat.format(entry.totalMoney)} บาทแล้ว`;
+      });
+      document.getElementById("clear-counter-entry").addEventListener("click", () => {
+        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
+        document.getElementById("legacy-free-entry").hidden = true;
+        save();
+        updateCounter();
+      });
+      document.getElementById("reset-daily").addEventListener("click", () => {
+        if (!window.confirm("ล้างยอดสะสมวันนี้และเริ่มวันใหม่หรือไม่?")) return;
+        dailyDate = localDateKey();
+        dailyCounts = emptyDailyCounts();
+        dailyTicketCounts = emptyTicketCounts();
+        dailyTicketCountsRecorded = false;
+        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
+        save();
+        updateCounter();
+        const note = document.getElementById("counter-entry-note");
+        note.className = "counter-note success";
+        note.textContent = "ล้างยอดสะสมวันนี้แล้ว";
+      });
+      const appTitle = document.title;
+      document.getElementById("print-daily").addEventListener("click", () => {
+        renderDailySummary();
+        document.title = `ยอดใช้บริการพิพิธภัณฑ์ประจำวัน-${localDateKey()}`;
+        window.print();
+      });
+      window.addEventListener("afterprint", () => { document.title = appTitle; });
+      restore();
+      calculate();
+      updateCounter();
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
