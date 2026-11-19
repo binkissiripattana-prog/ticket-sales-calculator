@@ -138,21 +138,20 @@
     input[type="date"], input[type="text"] { min-height: 44px; padding: 8px 10px; border: 1px solid #cbd6e3; border-radius: 10px; background: #fff; color: #172033; font: inherit; font-size: 16px; }
     .date-badge { padding: 5px 9px; border-radius: 999px; background: #d8e7ff; color: #1749a5; font-size: .82rem; font-weight: 850; white-space: nowrap; }
     .date-badge.today { background: #d8f1df; color: #17643b; }
-    .group-panel, .adjustment-panel, .message-panel { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 16px rgba(24, 36, 58, .04); }
-    .group-panel h3, .adjustment-panel h3, .message-panel h3 { margin: 0; color: var(--navy); font-size: 1rem; }
-    .group-panel p, .adjustment-panel p, .message-panel p { margin: 4px 0 9px; color: var(--muted); font-size: .84rem; }
+    .group-panel, .message-panel { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 16px rgba(24, 36, 58, .04); }
+    .group-panel h3, .message-panel h3 { margin: 0; color: var(--navy); font-size: 1rem; }
+    .group-panel p, .message-panel p { margin: 4px 0 9px; color: var(--muted); font-size: .84rem; }
     .group-list { display: grid; gap: 7px; }
     .group-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px auto; align-items: end; gap: 8px; padding: 8px; border: 1px solid #e4eaf2; border-radius: 10px; background: #f9fbfe; }
-    .group-row label, .adjust-count label { display: grid; gap: 4px; color: #42536a; font-size: .8rem; font-weight: 700; }
+    .group-row label { display: grid; gap: 4px; color: #42536a; font-size: .8rem; font-weight: 700; }
     .group-row input { width: 100%; min-width: 0; }
     .group-row input[type="number"] { text-align: center; }
     .small-action { min-height: 40px; padding: 7px 10px; color: #a32c39; background: #fff4f4; font-size: .84rem; }
     .group-summary { margin-top: 8px; color: #173c78; font-weight: 850; }
     .group-summary strong { font-variant-numeric: tabular-nums; }
-    .adjustment-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
-    .adjust-count { display: grid; grid-template-columns: minmax(0, 1fr) 86px; align-items: center; gap: 8px; padding: 7px 9px; border: 1px solid #e5eaf1; border-radius: 10px; background: #fafbfd; }
-    .adjust-count label { font-size: .82rem; }
-    .adjust-count input { width: 100%; text-align: center; }
+    .daily-edit-toolbar { display: flex; align-items: center; gap: 8px; margin: 9px 0; color: var(--muted); font-size: .82rem; }
+    .daily-people-cell { display: flex; justify-content: center; align-items: center; }
+    .edit-count-input { width: 76px; min-height: 38px; padding: 5px; border: 1px solid #9db8dc; border-radius: 8px; text-align: center; font: inherit; font-weight: 800; }
     .message-panel { border-color: #cbd9ed; background: #f8fbff; }
     .message-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .message-card { min-width: 0; padding: 10px; border: 1px solid #e1e8f0; border-radius: 11px; background: #fff; }
@@ -268,11 +267,12 @@
       .date-panel { align-items: stretch; flex-direction: column; gap: 7px; padding: 10px; }
       .date-controls { width: 100%; }
       .date-controls input { flex: 1; min-width: 0; }
-      .group-panel, .adjustment-panel, .message-panel { padding: 10px; }
+      .group-panel, .message-panel { padding: 10px; }
       .group-row { grid-template-columns: minmax(0, 1fr) 76px auto; gap: 5px; padding: 6px; }
       .group-row label { font-size: .72rem; }
       .group-row .small-action { padding: 6px; font-size: .75rem; }
-      .adjustment-grid, .message-grid { grid-template-columns: 1fr; }
+      .message-grid { grid-template-columns: 1fr; }
+      .daily-edit-toolbar { align-items: flex-start; flex-direction: column; gap: 4px; }
       .message-card textarea { min-height: 190px; }
       .comparison-panel { padding: 11px; }
       .comparison-heading h2 { font-size: .95rem; }
@@ -371,7 +371,7 @@
           <div class="field"><label for="book-start-40">เล่มเริ่มต้น</label><input id="book-start-40" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="ticket-start-40">เลขเริ่มต้น</label><input id="ticket-start-40" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="book-end-40">เล่มสิ้นสุด</label><input id="book-end-40" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
-          <div class="field"><label for="ticket-end-40">เลขสิ้นสุด</label><input id="ticket-end-40" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-40"><span class="field-note" id="end-note-40">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+          <div class="field"><label for="ticket-end-40">เลขสิ้นสุด</label><input id="ticket-end-40" data-field="ticketEnd" type="number" min="0" step="1" inputmode="numeric" aria-describedby="end-note-40"><span class="field-note" id="end-note-40">กรอกเลขสุดท้ายที่ขายไป · หากขาย 0 ใบ ให้กรอกเลขก่อนเลขเริ่มต้น 1 เลข เช่น เริ่ม 004 สิ้นสุด 003</span></div>
         </div>
         <div class="card-status" id="status-40" aria-live="polite">รอกรอกข้อมูล</div>
       </article>
@@ -382,7 +382,7 @@
           <div class="field"><label for="book-start-60">เล่มเริ่มต้น</label><input id="book-start-60" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="ticket-start-60">เลขเริ่มต้น</label><input id="ticket-start-60" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="book-end-60">เล่มสิ้นสุด</label><input id="book-end-60" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
-          <div class="field"><label for="ticket-end-60">เลขสิ้นสุด</label><input id="ticket-end-60" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-60"><span class="field-note" id="end-note-60">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+          <div class="field"><label for="ticket-end-60">เลขสิ้นสุด</label><input id="ticket-end-60" data-field="ticketEnd" type="number" min="0" step="1" inputmode="numeric" aria-describedby="end-note-60"><span class="field-note" id="end-note-60">กรอกเลขสุดท้ายที่ขายไป · หากขาย 0 ใบ ให้กรอกเลขก่อนเลขเริ่มต้น 1 เลข เช่น เริ่ม 004 สิ้นสุด 003</span></div>
         </div>
         <div class="card-status" id="status-60" aria-live="polite">รอกรอกข้อมูล</div>
       </article>
@@ -393,7 +393,7 @@
           <div class="field"><label for="book-start-100">เล่มเริ่มต้น</label><input id="book-start-100" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="ticket-start-100">เลขเริ่มต้น</label><input id="ticket-start-100" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="book-end-100">เล่มสิ้นสุด</label><input id="book-end-100" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
-          <div class="field"><label for="ticket-end-100">เลขสิ้นสุด</label><input id="ticket-end-100" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-100"><span class="field-note" id="end-note-100">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+          <div class="field"><label for="ticket-end-100">เลขสิ้นสุด</label><input id="ticket-end-100" data-field="ticketEnd" type="number" min="0" step="1" inputmode="numeric" aria-describedby="end-note-100"><span class="field-note" id="end-note-100">กรอกเลขสุดท้ายที่ขายไป · หากขาย 0 ใบ ให้กรอกเลขก่อนเลขเริ่มต้น 1 เลข เช่น เริ่ม 004 สิ้นสุด 003</span></div>
         </div>
         <div class="card-status" id="status-100" aria-live="polite">รอกรอกข้อมูล</div>
       </article>
@@ -404,7 +404,7 @@
           <div class="field"><label for="book-start-150">เล่มเริ่มต้น</label><input id="book-start-150" data-field="bookStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="ticket-start-150">เลขเริ่มต้น</label><input id="ticket-start-150" data-field="ticketStart" type="number" min="1" step="1" inputmode="numeric"></div>
           <div class="field"><label for="book-end-150">เล่มสิ้นสุด</label><input id="book-end-150" data-field="bookEnd" type="number" min="1" step="1" inputmode="numeric"></div>
-          <div class="field"><label for="ticket-end-150">เลขสิ้นสุด</label><input id="ticket-end-150" data-field="ticketEnd" type="number" min="1" step="1" inputmode="numeric" aria-describedby="end-note-150"><span class="field-note" id="end-note-150">กรอกเลขสุดท้ายที่ขายไป ไม่ใช่เลขที่เหลืออยู่</span></div>
+          <div class="field"><label for="ticket-end-150">เลขสิ้นสุด</label><input id="ticket-end-150" data-field="ticketEnd" type="number" min="0" step="1" inputmode="numeric" aria-describedby="end-note-150"><span class="field-note" id="end-note-150">กรอกเลขสุดท้ายที่ขายไป · หากขาย 0 ใบ ให้กรอกเลขก่อนเลขเริ่มต้น 1 เลข เช่น เริ่ม 004 สิ้นสุด 003</span></div>
         </div>
         <div class="card-status" id="status-150" aria-live="polite">รอกรอกข้อมูล</div>
       </article>
@@ -446,10 +446,10 @@
       </header>
 
       <section class="daily-glance" aria-label="สรุปยอดใช้บริการวันนี้">
-        <div class="daily-glance-top"><span><span class="daily-glance-title" id="daily-glance-title">📊 สรุปวันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
+        <div class="daily-glance-top"><span><span class="daily-glance-title" id="daily-glance-title">📊 สรุป Walk-in วันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
         <div class="daily-glance-values">
-          <div class="daily-glance-card"><span>👥 ผู้เข้าชมวันนี้</span><strong id="counter-today-people">0 คน</strong></div>
-          <div class="daily-glance-card"><span>💰 ยอดเงินวันนี้</span><strong id="counter-today-money">0 บาท</strong></div>
+          <div class="daily-glance-card"><span>👥 ผู้เข้าชม Walk-in</span><strong id="counter-today-people">0 คน</strong></div>
+          <div class="daily-glance-card"><span>💰 ยอดเงิน Walk-in</span><strong id="counter-today-money">0 บาท</strong></div>
         </div>
         <div class="daily-glance-actions">
           <button class="tab-link" type="button" data-view="ticket-page">🎟️ หน้าเลขตั๋ว</button>
@@ -457,7 +457,7 @@
         </div>
       </section>
 
-      <section class="counter-cards" aria-label="จำนวนคนแยกตามประเภทตั๋ว">
+      <section class="counter-cards" aria-label="จำนวนผู้เข้าชมแบบ Walk-in แยกตามประเภทตั๋ว">
         <article class="counter-card" data-price="40">
           <div class="card-heading"><h3>นักศึกษา นักเรียน บุคลากร</h3><span class="price-tag">40 บาท</span></div>
           <div class="field"><label for="counter-40">จำนวนคน</label><input id="counter-40" class="counter-input" type="number" min="0" step="1" value="0" inputmode="numeric"></div>
@@ -494,21 +494,13 @@
         </label>
       </section>
 
-      <section class="group-panel" aria-labelledby="group-panel-title">
-        <h3 id="group-panel-title">👨‍👩‍👧‍👦 ผู้เข้าชมแบบหมู่คณะ (ไม่บังคับ)</h3>
-        <p>เพิ่มชื่อหน่วยงานและจำนวนคน ระบบคิดคนละ 40 บาท และรวมยอดทันที</p>
-        <div id="group-list" class="group-list"></div>
-        <div class="counter-actions"><button id="add-group" class="tab-link" type="button">＋ เพิ่มหน่วยงาน</button></div>
-        <div class="group-summary" id="group-total">หมู่คณะ 0 คน · 0 บาท</div>
-      </section>
-
       <section class="counter-total-grid entry-total-grid" aria-label="ยอดของจำนวนที่กรอก">
         <div class="counter-total-card"><span>👥 จำนวนคนรวมรอบนี้</span><strong id="entry-total-people">0 คน</strong></div>
         <div class="counter-total-card"><span>💰 ยอดเงินรอบนี้</span><strong id="entry-total-money">0 บาท</strong></div>
       </section>
         <p class="counter-note" id="counter-entry-note" aria-live="polite">ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดวันที่เลือก</p>
       <div class="counter-actions">
-        <button class="calculate" id="record-counter" type="button">บันทึกยอดเข้ารวมวันนี้</button>
+        <button class="calculate" id="record-counter" type="button">บันทึกยอด Walk-in วันนี้</button>
         <button class="reset" id="clear-counter-entry" type="button">ล้างจำนวนที่กรอก</button>
       </div>
 
@@ -518,26 +510,22 @@
         <p class="daily-date" id="daily-date"></p>
         <details class="daily-details">
           <summary>ดูจำนวนตั๋วและคนเข้าแยกประเภท</summary>
+          <div class="daily-edit-toolbar"><button id="edit-saved-counts" class="tab-link" type="button" aria-pressed="false">✏️ แก้ไขจำนวนคน</button><span>กดแก้ไขเพื่อเพิ่มหรือลดจำนวนในตารางนี้ได้เลย</span></div>
           <div class="daily-table" role="table" aria-label="เปรียบเทียบตั๋วขายกับคนเข้าตามประเภท">
             <div class="daily-row daily-head" role="row"><span role="columnheader">ประเภท</span><span role="columnheader">ตั๋วขาย</span><span role="columnheader">คนเข้า</span><span role="columnheader">ผลต่าง</span></div>
-            <div class="daily-row" data-price="40" role="row"><span role="cell"><span class="daily-type">นักศึกษา นักเรียน บุคลากร</span><small class="daily-money" id="daily-money-40">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-40" role="cell">—</span><span id="daily-people-40" role="cell">0 คน</span><span id="daily-difference-40" role="cell">—</span></div>
-            <div class="daily-row" data-price="60" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่</span><small class="daily-money" id="daily-money-60">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-60" role="cell">—</span><span id="daily-people-60" role="cell">0 คน</span><span id="daily-difference-60" role="cell">—</span></div>
-            <div class="daily-row" data-price="100" role="row"><span role="cell"><span class="daily-type">เด็กต่างชาติ</span><small class="daily-money" id="daily-money-100">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-100" role="cell">—</span><span id="daily-people-100" role="cell">0 คน</span><span id="daily-difference-100" role="cell">—</span></div>
-            <div class="daily-row" data-price="150" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่ต่างชาติ</span><small class="daily-money" id="daily-money-150">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-150" role="cell">—</span><span id="daily-people-150" role="cell">0 คน</span><span id="daily-difference-150" role="cell">—</span></div>
-            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">เด็กต่ำกว่า 120 ซม.</span><span role="cell">—</span><span id="daily-people-free-short" role="cell">0 คน</span><span role="cell">—</span></div>
-            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ผู้พิการ</span><span role="cell">—</span><span id="daily-people-free-disabled" role="cell">0 คน</span><span role="cell">—</span></div>
-            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ภิกษุ</span><span role="cell">—</span><span id="daily-people-free-monk" role="cell">0 คน</span><span role="cell">—</span></div>
-            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ยกเว้นอื่นๆ</span><span role="cell">—</span><span id="daily-people-free-other" role="cell">0 คน</span><span role="cell">—</span></div>
-            <div class="daily-row" id="daily-row-free-legacy" data-price="free" role="row" hidden><span class="daily-type" role="cell">ยอดเดิมที่ยังไม่แยกประเภท</span><span role="cell">—</span><span id="daily-people-free-legacy" role="cell">0 คน</span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="40" role="row"><span role="cell"><span class="daily-type">นักศึกษา นักเรียน บุคลากร</span><small class="daily-money" id="daily-money-40">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-40" role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-40">0 คน</span><input class="edit-count-input" data-saved-count="40" type="number" min="0" step="1" inputmode="numeric" aria-label="จำนวนผู้เข้าชม Walk-in 40 บาท" hidden></span><span id="daily-difference-40" role="cell">—</span></div>
+            <div class="daily-row" data-price="60" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่</span><small class="daily-money" id="daily-money-60">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-60" role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-60">0 คน</span><input class="edit-count-input" data-saved-count="60" type="number" min="0" step="1" inputmode="numeric" aria-label="จำนวนผู้เข้าชม Walk-in 60 บาท" hidden></span><span id="daily-difference-60" role="cell">—</span></div>
+            <div class="daily-row" data-price="100" role="row"><span role="cell"><span class="daily-type">เด็กต่างชาติ</span><small class="daily-money" id="daily-money-100">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-100" role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-100">0 คน</span><input class="edit-count-input" data-saved-count="100" type="number" min="0" step="1" inputmode="numeric" aria-label="จำนวนผู้เข้าชม Walk-in 100 บาท" hidden></span><span id="daily-difference-100" role="cell">—</span></div>
+            <div class="daily-row" data-price="150" role="row"><span role="cell"><span class="daily-type">ผู้ใหญ่ต่างชาติ</span><small class="daily-money" id="daily-money-150">ตั๋ว — · คนเข้า 0 บาท</small></span><span id="daily-tickets-150" role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-150">0 คน</span><input class="edit-count-input" data-saved-count="150" type="number" min="0" step="1" inputmode="numeric" aria-label="จำนวนผู้เข้าชม Walk-in 150 บาท" hidden></span><span id="daily-difference-150" role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">เด็กต่ำกว่า 120 ซม.</span><span role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-free-short">0 คน</span><input class="edit-count-input" data-saved-count="freeShort" type="number" min="0" step="1" inputmode="numeric" aria-label="เด็กต่ำกว่า 120 ซม. เข้าฟรี" hidden></span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ผู้พิการ</span><span role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-free-disabled">0 คน</span><input class="edit-count-input" data-saved-count="freeDisabled" type="number" min="0" step="1" inputmode="numeric" aria-label="ผู้พิการเข้าฟรี" hidden></span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ภิกษุ</span><span role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-free-monk">0 คน</span><input class="edit-count-input" data-saved-count="freeMonk" type="number" min="0" step="1" inputmode="numeric" aria-label="ภิกษุเข้าฟรี" hidden></span><span role="cell">—</span></div>
+            <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ยกเว้นอื่นๆ</span><span role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-free-other">0 คน</span><input class="edit-count-input" data-saved-count="freeOther" type="number" min="0" step="1" inputmode="numeric" aria-label="ยกเว้นอื่นๆ เข้าฟรี" hidden></span><span role="cell">—</span></div>
+            <div class="daily-row" id="daily-row-free-legacy" data-price="free" role="row" hidden><span class="daily-type" role="cell">ยอดเดิมที่ยังไม่แยกประเภท</span><span role="cell">—</span><span class="daily-people-cell" role="cell"><span id="daily-people-free-legacy">0 คน</span><input class="edit-count-input" data-saved-count="freeLegacy" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดฟรีเดิมที่ยังไม่แยกประเภท" hidden></span><span role="cell">—</span></div>
           </div>
-          <section class="group-panel report-groups" aria-labelledby="report-groups-title">
-            <h3 id="report-groups-title">ผู้เข้าชมแบบหมู่คณะ</h3>
-            <div id="report-group-rows"></div>
-            <p class="group-summary" id="report-group-total">รวม 0 คน · 0 บาท</p>
-          </section>
           <section class="counter-total-grid" aria-label="ยอดสะสมวันนี้">
-            <div class="counter-total-card"><span>จำนวนคนรวมวันนี้</span><strong id="daily-total-people">0 คน</strong></div>
-            <div class="counter-total-card"><span>ยอดเงินรวมวันนี้</span><strong id="daily-total-money">0 บาท</strong></div>
+            <div class="counter-total-card"><span>จำนวนผู้เข้าชม Walk-in รวม</span><strong id="daily-total-people">0 คน</strong></div>
+            <div class="counter-total-card"><span>ยอดเงิน Walk-in รวม</span><strong id="daily-total-money">0 บาท</strong></div>
           </section>
           <p class="counter-note">ยอดที่บันทึกจะจำไว้ในเบราว์เซอร์นี้ และแยกตามวันที่</p>
           <div class="daily-actions">
@@ -546,20 +534,12 @@
         </details>
       </section>
 
-      <section class="adjustment-panel" aria-labelledby="adjustment-title">
-        <h3 id="adjustment-title">✏️ แก้ไขจำนวนคนที่บันทึกแล้ว</h3>
-        <p>แก้ตัวเลขยอดสะสมได้โดยตรง เพิ่มหรือลดได้ตลอด ระบบจะคำนวณยอดใหม่ให้อัตโนมัติ</p>
-        <div class="adjustment-grid">
-          <div class="adjust-count"><label for="saved-count-40">นักศึกษา นักเรียน บุคลากร · 40 บาท</label><input id="saved-count-40" data-saved-count="40" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 40 บาท"></div>
-          <div class="adjust-count"><label for="saved-count-60">ผู้ใหญ่ · 60 บาท</label><input id="saved-count-60" data-saved-count="60" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 60 บาท"></div>
-          <div class="adjust-count"><label for="saved-count-100">เด็กต่างชาติ · 100 บาท</label><input id="saved-count-100" data-saved-count="100" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 100 บาท"></div>
-          <div class="adjust-count"><label for="saved-count-150">ผู้ใหญ่ต่างชาติ · 150 บาท</label><input id="saved-count-150" data-saved-count="150" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 150 บาท"></div>
-          <div class="adjust-count"><label for="saved-free-short">เด็กต่ำกว่า 120 ซม. · ฟรี</label><input id="saved-free-short" data-saved-count="freeShort" type="number" min="0" step="1" inputmode="numeric"></div>
-          <div class="adjust-count"><label for="saved-free-disabled">ผู้พิการ · ฟรี</label><input id="saved-free-disabled" data-saved-count="freeDisabled" type="number" min="0" step="1" inputmode="numeric"></div>
-          <div class="adjust-count"><label for="saved-free-monk">ภิกษุ · ฟรี</label><input id="saved-free-monk" data-saved-count="freeMonk" type="number" min="0" step="1" inputmode="numeric"></div>
-          <div class="adjust-count"><label for="saved-free-other">ยกเว้นอื่นๆ · ฟรี</label><input id="saved-free-other" data-saved-count="freeOther" type="number" min="0" step="1" inputmode="numeric"></div>
-          <div class="adjust-count" id="saved-free-legacy-wrap" hidden><label for="saved-free-legacy">ยอดฟรีเดิมที่ยังไม่แยกประเภท</label><input id="saved-free-legacy" data-saved-count="freeLegacy" type="number" min="0" step="1" inputmode="numeric"></div>
-        </div>
+      <section class="group-panel" aria-labelledby="group-panel-title">
+        <h3 id="group-panel-title">👥 ผู้เข้าชมแบบหมู่คณะเท่านั้น</h3>
+        <p>บันทึกจำนวนหน่วยงานและผู้เข้าชมแบบหมู่คณะ · คิดคนละ 40 บาท · แยกจากยอด Walk-in</p>
+        <div class="group-list" id="group-list"></div>
+        <div class="group-actions"><button class="tab-link" id="add-group" type="button">＋ เพิ่มหน่วยงานหมู่คณะ</button></div>
+        <p class="group-summary" id="group-total">0 หน่วยงาน · 0 คน · 0 บาท</p>
       </section>
 
       <section class="message-panel" aria-labelledby="message-panel-title">
@@ -579,14 +559,14 @@
         </header>
         <div class="report-stat-grid">
           <div class="report-stat"><span>🎟️ ตั๋วขาย</span><strong id="report-total-tickets">— ใบ</strong></div>
-          <div class="report-stat"><span>👥 ผู้ชำระเงิน</span><strong id="report-paid-visitors">0 คน</strong></div>
+          <div class="report-stat"><span>👥 ผู้ชำระเงิน Walk-in</span><strong id="report-paid-visitors">0 คน</strong></div>
           <div class="report-stat"><span>🆓 ผู้เข้าฟรี</span><strong id="report-free-visitors">0 คน</strong></div>
-          <div class="report-stat"><span>👨‍👩‍👧 ผู้เข้าชมรวม</span><strong id="report-all-visitors">0 คน</strong></div>
-          <div class="report-stat"><span>💰 ยอดหน้าเคาน์เตอร์</span><strong id="report-cash-total">0 บาท</strong></div>
+          <div class="report-stat"><span>👨‍👩‍👧 ผู้เข้าชมรวม (Walk-in + หมู่คณะ)</span><strong id="report-all-visitors">0 คน</strong></div>
+          <div class="report-stat"><span>💰 รายได้รวม (Walk-in + หมู่คณะ)</span><strong id="report-cash-total">0 บาท</strong></div>
           <div class="report-stat"><span>🧾 ยอดจากเลขตั๋ว</span><strong id="report-ticket-sales">— บาท</strong></div>
         </div>
-        <h2>ผู้เข้าชมแบบหมู่คณะ · คนละ 40 บาท</h2>
-        <table class="report-table"><thead><tr><th>หน่วยงาน</th><th>จำนวนคน</th><th>ยอดเงิน</th></tr></thead><tbody id="report-groups-print"><tr><td>ไม่มีข้อมูลหมู่คณะ</td><td>0</td><td>0 บาท</td></tr></tbody></table>
+        <h2>สรุปเฉพาะผู้เข้าชมแบบหมู่คณะ · คนละ 40 บาท</h2>
+        <table class="report-table"><thead><tr><th>หมู่คณะ</th><th>จำนวนผู้เข้าชม</th><th>ยอดเงิน</th></tr></thead><tbody id="report-groups-print"><tr><td>0 หน่วยงาน</td><td>0 คน</td><td>0 บาท</td></tr></tbody></table>
         <h2>เปรียบเทียบตั๋วขายกับคนชำระเงิน</h2>
         <table class="report-table">
           <thead><tr><th>ประเภทตั๋ว</th><th>ตั๋วขาย</th><th>คนชำระ</th><th>ผลต่าง</th><th>ยอดตั๋ว</th><th>ยอดเคาน์เตอร์</th></tr></thead>
@@ -608,7 +588,7 @@
             <tr id="report-free-legacy-row" hidden><td>ยอดเดิมที่ยังไม่แยกประเภท</td><td id="report-free-legacy">0</td></tr>
           </tbody>
         </table>
-        <p class="report-note" id="report-comparison-note">การเทียบจำนวนตั๋วกับคนชำระเงินจะแสดงหลังอัปเดตยอดตั๋ววันนี้</p>
+        <p class="report-note" id="report-comparison-note">การเทียบจำนวนตั๋วกับผู้ชำระเงิน Walk-in · สรุปยอดหมู่คณะแยกไว้ต่างหาก</p>
       </section>
     </section>
   </main>
@@ -652,6 +632,7 @@
       let dailyTicketCountsRecorded = false;
       let dailyTicketRanges = {};
       let dailyGroups = [];
+      let editingSavedCounts = false;
 
       function save() {
         const record = {
@@ -689,6 +670,10 @@
         return Number.isInteger(count) && count >= 0 ? count : 0;
       }
 
+      function groupOrganizationCount() {
+        return dailyGroups.filter(group => String(group.name || "").trim() || safeCount(group.count) > 0).length;
+      }
+
       function clearDayFields() {
         for (const card of cards) for (const input of card.querySelectorAll("[data-field]")) input.value = "";
         for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
@@ -698,8 +683,19 @@
       function updateSavedCountInputs() {
         for (const input of document.querySelectorAll("[data-saved-count]")) {
           input.value = dailyCounts[input.dataset.savedCount] || 0;
+          input.hidden = !editingSavedCounts;
+          const value = input.parentElement.querySelector("span[id^='daily-people-']");
+          if (value) value.hidden = editingSavedCounts;
         }
-        document.getElementById("saved-free-legacy-wrap").hidden = !(dailyCounts.freeLegacy > 0);
+        document.getElementById("daily-row-free-legacy").hidden = !(editingSavedCounts || dailyCounts.freeLegacy > 0);
+        const editButton = document.getElementById("edit-saved-counts");
+        editButton.setAttribute("aria-pressed", String(editingSavedCounts));
+        editButton.textContent = editingSavedCounts ? "✓ เสร็จสิ้นการแก้ไข" : "✏️ แก้ไขจำนวนคน";
+      }
+
+      function setSavedCountsEditMode(enabled) {
+        editingSavedCounts = enabled;
+        updateSavedCountInputs();
       }
 
       function renderGroupEditor() {
@@ -838,9 +834,9 @@
         badge.textContent = isToday ? "วันนี้" : "วันที่เลือก";
         badge.classList.toggle("today", isToday);
         const dayLabel = isToday ? "วันนี้" : formatThaiDate();
-        document.getElementById("daily-glance-title").textContent = `📊 สรุป${dayLabel}`;
-        document.getElementById("daily-summary-title").textContent = `สรุปเทียบยอด${dayLabel}`;
-        document.getElementById("record-counter").textContent = `บันทึกยอดเข้ารวม${isToday ? "วันนี้" : "วันที่เลือก"}`;
+        document.getElementById("daily-glance-title").textContent = `📊 สรุป Walk-in ${dayLabel}`;
+        document.getElementById("daily-summary-title").textContent = `สรุปเทียบยอด Walk-in ${dayLabel}`;
+        document.getElementById("record-counter").textContent = `บันทึกยอด Walk-in ${isToday ? "วันนี้" : "วันที่เลือก"}`;
         document.getElementById("reset-daily").textContent = `ล้างยอด${isToday ? "วันนี้" : "วันที่เลือก"} เริ่มวันใหม่`;
       }
 
@@ -857,7 +853,7 @@
 
       function buildOpeningMessage() {
         const lines = [
-          "เริ่มวัน : เปิดจำหน่ายบัตรเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
+          "เปิดจำหน่ายบัตรเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
           `ประจำวัน ${formatThaiDate()}`,
           "",
         ];
@@ -877,27 +873,27 @@
       function buildClosingMessage() {
         const groupPeople = dailyGroups.reduce((sum, group) => sum + safeCount(group.count), 0);
         const groupMoney = groupPeople * 40;
+        const groupOrganizations = groupOrganizationCount();
         const freeLabels = [
           ["freeShort", "เด็กส่วนสูงไม่ถึง 120 เซนติเมตร"], ["freeDisabled", "ผู้พิการ"],
           ["freeMonk", "ภิกษุ"], ["freeOther", "ยกเว้นกรณีพิเศษ"], ["freeLegacy", "ยอดฟรีเดิมที่ยังไม่แยกประเภท"],
         ];
         const freePeople = freeLabels.reduce((sum, [key]) => sum + safeCount(dailyCounts[key]), 0);
-        const paidPeople = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]), 0) + groupPeople;
+        const paidPeople = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]), 0);
         const totalPeople = paidPeople + freePeople;
-        const totalMoney = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]) * price, 0) + groupMoney;
+        const walkInMoney = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]) * price, 0);
+        const totalMoney = walkInMoney + groupMoney;
         const freeBreakdown = freeLabels.filter(([key]) => safeCount(dailyCounts[key]) > 0)
           .map(([key, label]) => `${label} ${numberFormat.format(dailyCounts[key])} คน`).join(" และ ") || "ไม่มีผู้เข้าชมฟรี";
         const lines = [
-          "ท้ายวัน :ส่งเงินรายได้ค่าเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
+          "ส่งเงินรายได้ค่าเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
           `ประจำวัน ${formatThaiDate()}`,
           "",
-          `ยอดเงินรวม ${numberFormat.format(totalMoney)} บาท`,
+          `ยอดเงินรวมทั้งหมด (Walk-in และหมู่คณะ) ${numberFormat.format(totalMoney)} บาท`,
+          `ยอดเงิน Walk-in ${numberFormat.format(walkInMoney)} บาท`,
           "",
-          `เข้าชมแบบหมู่คณะ จำนวน ${numberFormat.format(groupPeople)} คน คนละ 40 บาท เป็นเงิน ${numberFormat.format(groupMoney)} บาท`,
+          `เข้าชมแบบหมู่คณะ ${numberFormat.format(groupOrganizations)} หน่วยงาน คิดเป็นเงิน ${numberFormat.format(groupMoney)} บาท`,
         ];
-        for (const group of dailyGroups) {
-          lines.push(`${group.name || "ไม่ระบุหน่วยงาน"} จำนวน ${numberFormat.format(safeCount(group.count))} คน เป็นเงิน ${numberFormat.format(safeCount(group.count) * 40)} บาท`);
-        }
         lines.push("");
         for (const price of counterPrices) {
           const range = dailyTicketRanges[String(price)];
@@ -909,10 +905,11 @@
           }
           lines.push("");
         }
-        lines.push(`ผู้ใช้บริการแบบมีค่าธรรมเนียม ${numberFormat.format(paidPeople)} คน`);
-        lines.push(`ผู้ใช้บริการแบบยกเว้นค่าธรรมเนียม ${numberFormat.format(freePeople)} คน (${freeBreakdown})`);
+        lines.push(`ผู้ใช้บริการ Walk-in แบบมีค่าธรรมเนียม ${numberFormat.format(paidPeople)} คน`);
+        lines.push(`ผู้ใช้บริการ Walk-in แบบยกเว้นค่าธรรมเนียม ${numberFormat.format(freePeople)} คน (${freeBreakdown})`);
         lines.push("");
-        lines.push(`ผู้ใช้บริการรวมทั้งสิ้น ${numberFormat.format(totalPeople)} คน`);
+        lines.push(`ผู้ใช้บริการ Walk-in รวม ${numberFormat.format(totalPeople)} คน`);
+        lines.push(`ผู้ใช้บริการรวมทั้งสิ้น (Walk-in และหมู่คณะ) ${numberFormat.format(totalPeople + groupPeople)} คน`);
         return lines.join("\n");
       }
 
@@ -934,8 +931,9 @@
         let mismatchedTypes = 0;
         const groupPeople = dailyGroups.reduce((sum, group) => sum + safeCount(group.count), 0);
         const groupMoney = groupPeople * 40;
+        const groupOrganizations = groupOrganizationCount();
         for (const price of counterPrices) {
-          const count = (dailyCounts[String(price)] || 0) + (price === 40 ? groupPeople : 0);
+          const count = dailyCounts[String(price)] || 0;
           const amount = count * price;
           const ticketCount = dailyTicketCounts[String(price)] || 0;
           const ticketAmount = ticketCount * price;
@@ -964,43 +962,19 @@
         }
         const legacyFreeCount = dailyCounts.freeLegacy || 0;
         document.getElementById("daily-people-free-legacy").textContent = `${numberFormat.format(legacyFreeCount)} คน`;
-        document.getElementById("daily-row-free-legacy").hidden = legacyFreeCount === 0;
+        document.getElementById("daily-row-free-legacy").hidden = !(editingSavedCounts || legacyFreeCount > 0);
         totalPeople += legacyFreeCount;
         freePeople += legacyFreeCount;
-        document.getElementById("group-total").textContent = `หมู่คณะ ${numberFormat.format(groupPeople)} คน · ${numberFormat.format(groupMoney)} บาท`;
-        document.getElementById("report-group-total").textContent = `รวม ${numberFormat.format(groupPeople)} คน · ${numberFormat.format(groupMoney)} บาท`;
-        const reportGroupRows = document.getElementById("report-group-rows");
-        reportGroupRows.replaceChildren();
+        document.getElementById("group-total").textContent = `หมู่คณะ ${numberFormat.format(groupOrganizations)} หน่วยงาน · ${numberFormat.format(groupPeople)} คน · ${numberFormat.format(groupMoney)} บาท`;
         const printableGroupRows = document.getElementById("report-groups-print");
         printableGroupRows.replaceChildren();
-        if (dailyGroups.length === 0) {
-          const empty = document.createElement("p");
-          empty.className = "counter-note";
-          empty.textContent = "ไม่มีข้อมูลหมู่คณะ";
-          reportGroupRows.append(empty);
-          const printRow = document.createElement("tr");
-          for (const value of ["ไม่มีข้อมูลหมู่คณะ", "0", "0 บาท"]) {
-            const cell = document.createElement("td");
-            cell.textContent = value;
-            printRow.append(cell);
-          }
-          printableGroupRows.append(printRow);
-        } else {
-          for (const group of dailyGroups) {
-            const row = document.createElement("p");
-            row.className = "counter-note";
-            const count = safeCount(group.count);
-            row.textContent = `${group.name || "ไม่ระบุหน่วยงาน"} · ${numberFormat.format(count)} คน · ${numberFormat.format(count * 40)} บาท`;
-            reportGroupRows.append(row);
-            const printRow = document.createElement("tr");
-            for (const value of [group.name || "ไม่ระบุหน่วยงาน", numberFormat.format(count), `${numberFormat.format(count * 40)} บาท`]) {
-              const cell = document.createElement("td");
-              cell.textContent = value;
-              printRow.append(cell);
-            }
-            printableGroupRows.append(printRow);
-          }
+        const printRow = document.createElement("tr");
+        for (const value of [`${numberFormat.format(groupOrganizations)} หน่วยงาน`, `${numberFormat.format(groupPeople)} คน`, `${numberFormat.format(groupMoney)} บาท`]) {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          printRow.append(cell);
         }
+        printableGroupRows.append(printRow);
         document.getElementById("daily-total-people").textContent = `${numberFormat.format(totalPeople)} คน`;
         document.getElementById("daily-total-money").textContent = `${numberFormat.format(totalMoney)} บาท`;
         const difference = totalTickets - paidPeople;
@@ -1071,11 +1045,11 @@
         document.getElementById("report-total-tickets").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTickets)} ใบ` : "ยังไม่อัปเดต";
         document.getElementById("report-paid-visitors").textContent = `${numberFormat.format(paidPeople)} คน`;
         document.getElementById("report-free-visitors").textContent = `${numberFormat.format(freePeople)} คน`;
-        document.getElementById("report-all-visitors").textContent = `${numberFormat.format(totalPeople)} คน`;
-        document.getElementById("report-cash-total").textContent = `${numberFormat.format(totalMoney)} บาท`;
+        document.getElementById("report-all-visitors").textContent = `${numberFormat.format(totalPeople + groupPeople)} คน`;
+        document.getElementById("report-cash-total").textContent = `${numberFormat.format(totalMoney + groupMoney)} บาท`;
         document.getElementById("report-ticket-sales").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTicketMoney)} บาท` : "ยังไม่อัปเดต";
         for (const price of counterPrices) {
-          const count = (dailyCounts[String(price)] || 0) + (price === 40 ? groupPeople : 0);
+          const count = dailyCounts[String(price)] || 0;
           const ticketCount = dailyTicketCounts[String(price)] || 0;
           const amount = count * price;
           const ticketAmount = ticketCount * price;
@@ -1168,10 +1142,12 @@
         }
 
         const { bookStart, ticketStart, bookEnd, ticketEnd } = values;
-        const wholePositive = [bookStart, ticketStart, bookEnd, ticketEnd].every(value => Number.isInteger(value) && value > 0);
-        const ordered = bookEnd > bookStart || (bookEnd === bookStart && ticketEnd >= ticketStart);
-        const validTicketNumbers = ticketStart <= perBook && ticketEnd <= perBook;
-        if (!wholePositive || !ordered || !validTicketNumbers) {
+        const positiveValues = [bookStart, ticketStart, bookEnd].every(value => Number.isInteger(value) && value > 0);
+        const zeroSale = bookEnd === bookStart && ticketEnd === ticketStart - 1;
+        const endIsValid = Number.isInteger(ticketEnd) && (ticketEnd > 0 || zeroSale);
+        const ordered = bookEnd > bookStart || (bookEnd === bookStart && (ticketEnd >= ticketStart || zeroSale));
+        const validTicketNumbers = ticketStart <= perBook && (ticketEnd <= perBook || zeroSale);
+        if (!positiveValues || !endIsValid || !ordered || !validTicketNumbers) {
           statusEl.textContent = `ตรวจสอบช่วงเล่มและเลขตั๋ว (เลขตั๋วต้องอยู่ระหว่าง 1–${numberFormat.format(perBook)})`;
           statusEl.classList.add("error");
           return { kind: "invalid", price };
@@ -1258,6 +1234,9 @@
       document.getElementById("select-today").addEventListener("click", () => {
         dateInput.value = localDateKey();
         dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      document.getElementById("edit-saved-counts").addEventListener("click", () => {
+        setSavedCountsEditMode(!editingSavedCounts);
       });
       document.getElementById("add-group").addEventListener("click", () => {
         dailyGroups.push({ name: "", count: 0 });
