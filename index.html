@@ -32,28 +32,17 @@
     .per-book input { width: 110px; }
     .unit { color: var(--muted); }
     .helper { font-size: .88rem; color: var(--muted); }
-    .page-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 6px; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 14px; background: #eaf0f7; }
+    .page-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 6px; margin: 0 0 16px; border: 1px solid var(--line); border-radius: 14px; background: #eaf0f7; }
     .tab-button { min-height: 48px; padding: 10px 14px; border: 0; border-radius: 10px; background: transparent; color: #526176; font: inherit; font-weight: 700; cursor: pointer; }
     .tab-button.active { background: #fff; color: var(--navy); box-shadow: 0 2px 8px rgba(24, 36, 58, .1); }
     .page-panel[hidden] { display: none !important; }
     .counter-heading { margin: 0 0 10px; }
     .counter-heading h2 { margin: 0; color: var(--navy); font-size: 1.25rem; }
     .counter-heading p { margin: 3px 0 0; color: var(--muted); font-size: .92rem; }
-    .daily-glance { margin: 0 0 11px; padding: 12px; border: 1px solid #c7d8f5; border-radius: 15px; background: linear-gradient(135deg, #edf4ff, #f8fbff); }
-    .daily-glance-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-    .daily-glance-title { color: #173c78; font-size: 1rem; font-weight: 850; }
-    .daily-glance-date { display: block; color: var(--muted); font-size: .75rem; font-weight: 600; }
-    .daily-glance-status { color: var(--muted); font-size: .8rem; font-weight: 750; text-align: right; }
-    .daily-glance-status.match { color: #08776b; }
-    .daily-glance-status.mismatch { color: var(--red); }
-    .daily-glance-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .daily-glance-card { display: grid; gap: 1px; padding: 9px 11px; border: 1px solid #dce7f6; border-radius: 11px; background: #fff; }
-    .daily-glance-card span { color: #42536a; font-size: .82rem; font-weight: 700; }
-    .daily-glance-card strong { color: #173c78; font-size: clamp(1.25rem, 3.5vw, 1.75rem); line-height: 1.25; font-variant-numeric: tabular-nums; }
-    .daily-glance-actions { display: flex; gap: 8px; margin-top: 8px; }
-    .daily-glance-actions button { flex: 1 1 0; min-height: 42px; padding: 7px 9px; font-size: .85rem; }
     .pdf-button { color: #fff; background: #17643b; }
     .pdf-button:hover { background: #104b2c; }
+    .summary-page-actions { display: flex; justify-content: flex-end; margin: 8px 0; }
+    .summary-page-actions button { width: 100%; max-width: 320px; }
     .counter-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .counter-card { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 6px 18px rgba(24, 36, 58, .045); }
     .counter-card .card-heading { margin-bottom: 8px; }
@@ -139,8 +128,12 @@
     .date-badge { padding: 5px 9px; border-radius: 999px; background: #d8e7ff; color: #1749a5; font-size: .82rem; font-weight: 850; white-space: nowrap; }
     .date-badge.today { background: #d8f1df; color: #17643b; }
     .group-panel, .message-panel { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 16px rgba(24, 36, 58, .04); }
-    .group-panel h3, .message-panel h3 { margin: 0; color: var(--navy); font-size: 1rem; }
-    .group-panel p, .message-panel p { margin: 4px 0 9px; color: var(--muted); font-size: .84rem; }
+    .group-panel { border: 2px solid #123d25; background: linear-gradient(145deg, #1d633a, #144b2d); box-shadow: 0 8px 20px rgba(28, 87, 49, .18); }
+    .group-panel h3 { margin: 0; color: #fff; font-size: 1rem; }
+    .group-panel p { margin: 4px 0 9px; color: #e0f0e4; font-size: .84rem; }
+    .group-panel .group-summary { color: #fff; }
+    .message-panel h3 { margin: 0; color: var(--navy); font-size: 1rem; }
+    .message-panel p { margin: 4px 0 9px; color: var(--muted); font-size: .84rem; }
     .group-list { display: grid; gap: 7px; }
     .group-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px auto; align-items: end; gap: 8px; padding: 8px; border: 1px solid #e4eaf2; border-radius: 10px; background: #f9fbfe; }
     .group-row label { display: grid; gap: 4px; color: #42536a; font-size: .8rem; font-weight: 700; }
@@ -168,8 +161,8 @@
     .counter-card[data-price="60"] .card-heading h3 { color: #754500; }
     .counter-card[data-price="100"] .card-heading h3 { color: #1749a5; }
     .counter-card[data-price="150"] .card-heading h3 { color: #17643b; }
-    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .ticket-card { position: relative; overflow: hidden; padding: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px; border: 2px solid #c9d4e2; border-radius: 18px; background: #edf2f7; box-shadow: 0 8px 24px rgba(24, 36, 58, .055); }
+    .ticket-card { position: relative; overflow: hidden; padding: 18px; border: 1px solid #cbd5e1; border-radius: 13px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7); }
     .ticket-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, #245fce, #55a6dc); }
     .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
     .ticket-card[data-price="40"]::before { background: linear-gradient(90deg, #7c3aed, #b38af2); }
@@ -242,16 +235,8 @@
       .counter-heading { margin-bottom: 7px; }
       .counter-heading h2 { font-size: 1.12rem; }
       .counter-heading p { font-size: .82rem; line-height: 1.4; }
-      .daily-glance { margin-bottom: 8px; padding: 9px; }
-      .daily-glance-top { margin-bottom: 6px; }
-      .daily-glance-title { font-size: .9rem; }
-      .daily-glance-status { font-size: .72rem; }
-      .daily-glance-values { gap: 6px; }
-      .daily-glance-card { padding: 7px 8px; }
-      .daily-glance-card span { font-size: .74rem; }
-      .daily-glance-card strong { font-size: 1.25rem; }
-      .daily-glance-actions { gap: 6px; margin-top: 6px; }
-      .daily-glance-actions button { min-height: 40px; padding: 6px; font-size: .76rem; }
+      .page-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tab-button { padding: 8px 4px; font-size: .78rem; line-height: 1.25; }
       .entry-total-grid .counter-total-card { min-height: 69px; padding: 8px; }
       .entry-total-grid .counter-total-card span { font-size: .78rem; }
       .entry-total-grid .counter-total-card strong { font-size: 1.35rem; }
@@ -284,6 +269,7 @@
       .daily-row { grid-template-columns: 1.25fr .75fr .75fr .65fr; gap: 4px; padding: 7px 6px; font-size: .76rem; }
       .daily-row.daily-head { font-size: .72rem; }
       .daily-money { font-size: .68rem; }
+      .cards { gap: 8px; padding: 8px; border-radius: 15px; }
       .ticket-card { min-width: 0; padding: 15px; }
       .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 10px; }
       .field { min-width: 0; }
@@ -314,9 +300,9 @@
       @page { size: A4 portrait; margin: 12mm; }
       html, body { min-height: 0; padding: 0 !important; background: #fff !important; color: #111 !important; }
       body > main { width: 100%; max-width: none; margin: 0; }
-      body > main > header, body > main > .date-panel, .page-tabs, #ticket-page { display: none !important; }
-      #counter-page { display: block !important; }
-      #counter-page > :not(#daily-report) { display: none !important; }
+      body > main > header, body > main > .date-panel, .page-tabs, #ticket-page, #counter-page { display: none !important; }
+      #summary-page { display: block !important; }
+      #summary-page > :not(#daily-report) { display: none !important; }
       #daily-report { display: block !important; color: #111; font-size: 10pt; }
       #daily-report header { margin: 0 0 12px; padding-bottom: 9px; border-bottom: 2px solid #23395d; }
       #daily-report .report-kicker { margin: 0 0 2px; color: #526176; font-size: 9pt; font-weight: 700; }
@@ -349,9 +335,10 @@
       <div class="date-controls"><input id="daily-date-input" type="date" aria-label="เลือกวันที่บันทึกยอด"><span id="date-badge" class="date-badge">วันนี้</span><button id="select-today" class="tab-link" type="button">วันนี้</button></div>
     </section>
 
-    <nav class="page-tabs" aria-label="เลือกหน้าคำนวณ">
+    <nav class="page-tabs" aria-label="เลือกหน้า">
       <button type="button" class="tab-button active" data-view="ticket-page" aria-pressed="true">คำนวณจากเลขตั๋ว</button>
       <button type="button" class="tab-button" data-view="counter-page" aria-pressed="false">หน้าเคาน์เตอร์</button>
+      <button type="button" class="tab-button" data-view="summary-page" aria-pressed="false">สรุปและเปิดยอด</button>
     </nav>
 
     <section id="ticket-page" class="page-panel">
@@ -445,18 +432,6 @@
         <p>กรอกจำนวนคน แล้วยอดจะคำนวณให้ทันที · วันที่ในแถบด้านบนเปลี่ยนได้</p>
       </header>
 
-      <section class="daily-glance" aria-label="สรุปยอดใช้บริการวันนี้">
-        <div class="daily-glance-top"><span><span class="daily-glance-title" id="daily-glance-title">📊 สรุป Walk-in วันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
-        <div class="daily-glance-values">
-          <div class="daily-glance-card"><span>👥 ผู้เข้าชม Walk-in</span><strong id="counter-today-people">0 คน</strong></div>
-          <div class="daily-glance-card"><span>💰 ยอดเงิน Walk-in</span><strong id="counter-today-money">0 บาท</strong></div>
-        </div>
-        <div class="daily-glance-actions">
-          <button class="tab-link" type="button" data-view="ticket-page">🎟️ หน้าเลขตั๋ว</button>
-          <button class="pdf-button" id="print-daily" type="button">📄 บันทึก PDF</button>
-        </div>
-      </section>
-
       <section class="counter-cards" aria-label="จำนวนผู้เข้าชมแบบ Walk-in แยกตามประเภทตั๋ว">
         <article class="counter-card" data-price="40">
           <div class="card-heading"><h3>นักศึกษา นักเรียน บุคลากร</h3><span class="price-tag">40 บาท</span></div>
@@ -533,6 +508,15 @@
           </div>
         </details>
       </section>
+
+    </section>
+
+    <section id="summary-page" class="page-panel" hidden>
+      <header class="counter-heading">
+        <h2>สรุปและเปิดยอด</h2>
+        <p>จัดการยอดหมู่คณะและเตรียมข้อความสรุปประจำวัน</p>
+      </header>
+      <div class="summary-page-actions"><button class="pdf-button" id="print-daily" type="button">📄 บันทึกสรุปประจำวันเป็น PDF</button></div>
 
       <section class="group-panel" aria-labelledby="group-panel-title">
         <h3 id="group-panel-title">👥 ผู้เข้าชมแบบหมู่คณะเท่านั้น</h3>
@@ -834,7 +818,6 @@
         badge.textContent = isToday ? "วันนี้" : "วันที่เลือก";
         badge.classList.toggle("today", isToday);
         const dayLabel = isToday ? "วันนี้" : formatThaiDate();
-        document.getElementById("daily-glance-title").textContent = `📊 สรุป Walk-in ${dayLabel}`;
         document.getElementById("daily-summary-title").textContent = `สรุปเทียบยอด Walk-in ${dayLabel}`;
         document.getElementById("record-counter").textContent = `บันทึกยอด Walk-in ${isToday ? "วันนี้" : "วันที่เลือก"}`;
         document.getElementById("reset-daily").textContent = `ล้างยอด${isToday ? "วันนี้" : "วันที่เลือก"} เริ่มวันใหม่`;
@@ -879,7 +862,7 @@
           ["freeMonk", "ภิกษุ"], ["freeOther", "ยกเว้นกรณีพิเศษ"], ["freeLegacy", "ยอดฟรีเดิมที่ยังไม่แยกประเภท"],
         ];
         const freePeople = freeLabels.reduce((sum, [key]) => sum + safeCount(dailyCounts[key]), 0);
-        const paidPeople = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]), 0);
+        const paidPeople = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]), 0) + groupPeople;
         const totalPeople = paidPeople + freePeople;
         const walkInMoney = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]) * price, 0);
         const totalMoney = walkInMoney + groupMoney;
@@ -889,10 +872,9 @@
           "ส่งเงินรายได้ค่าเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
           `ประจำวัน ${formatThaiDate()}`,
           "",
-          `ยอดเงินรวมทั้งหมด (Walk-in และหมู่คณะ) ${numberFormat.format(totalMoney)} บาท`,
-          `ยอดเงิน Walk-in ${numberFormat.format(walkInMoney)} บาท`,
+          `ยอดเงินรวม ${numberFormat.format(totalMoney)} บาท`,
           "",
-          `เข้าชมแบบหมู่คณะ ${numberFormat.format(groupOrganizations)} หน่วยงาน คิดเป็นเงิน ${numberFormat.format(groupMoney)} บาท`,
+          `เข้าชมแบบหมู่คณะ จำนวน ${numberFormat.format(groupPeople)} คน คนละ 40 บาท เป็นเงิน ${numberFormat.format(groupMoney)} บาท (${numberFormat.format(groupOrganizations)} หน่วยงาน)`,
         ];
         lines.push("");
         for (const price of counterPrices) {
@@ -905,11 +887,10 @@
           }
           lines.push("");
         }
-        lines.push(`ผู้ใช้บริการ Walk-in แบบมีค่าธรรมเนียม ${numberFormat.format(paidPeople)} คน`);
-        lines.push(`ผู้ใช้บริการ Walk-in แบบยกเว้นค่าธรรมเนียม ${numberFormat.format(freePeople)} คน (${freeBreakdown})`);
+        lines.push(`ผู้ใช้บริการแบบมีค่าธรรมเนียม ${numberFormat.format(paidPeople)} คน`);
+        lines.push(`ผู้ใช้บริการแบบยกเว้นค่าธรรมเนียม ${numberFormat.format(freePeople)} คน (${freeBreakdown})`);
         lines.push("");
-        lines.push(`ผู้ใช้บริการ Walk-in รวม ${numberFormat.format(totalPeople)} คน`);
-        lines.push(`ผู้ใช้บริการรวมทั้งสิ้น (Walk-in และหมู่คณะ) ${numberFormat.format(totalPeople + groupPeople)} คน`);
+        lines.push(`ผู้ใช้บริการรวมทั้งสิ้น ${numberFormat.format(totalPeople)} คน`);
         return lines.join("\n");
       }
 
@@ -1025,21 +1006,6 @@
           ? `ยอดขายจากตั๋ว ${numberFormat.format(totalTicketMoney)} บาท · ยอดหน้าเคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท · ${moneyDifferenceText}`
           : `ยอดขายจากตั๋วยังไม่อัปเดต · ยอดหน้าเคาน์เตอร์ ${numberFormat.format(totalMoney)} บาท`;
         moneyComparison.className = dailyTicketCountsRecorded ? `comparison-visitors ${moneyDifference === 0 ? "match" : "mismatch"}` : "comparison-visitors";
-
-        document.getElementById("counter-today-people").textContent = `${numberFormat.format(totalPeople)} คน`;
-        document.getElementById("counter-today-money").textContent = `${numberFormat.format(totalMoney)} บาท`;
-        document.getElementById("counter-today-date").textContent = dateText;
-        const todayStatus = document.getElementById("counter-today-status");
-        todayStatus.className = "daily-glance-status";
-        if (!dailyTicketCountsRecorded) {
-          todayStatus.textContent = "ยังไม่เทียบยอดตั๋ว";
-        } else if (mismatchedTypes === 0) {
-          todayStatus.textContent = "✓ ตั๋วตรงกับคนชำระ";
-          todayStatus.classList.add("match");
-        } else {
-          todayStatus.textContent = `⚠ ต่าง ${numberFormat.format(mismatchedTypes)} ประเภท`;
-          todayStatus.classList.add("mismatch");
-        }
 
         document.getElementById("report-date").textContent = `ประจำวันที่ ${dateText}`;
         document.getElementById("report-total-tickets").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTickets)} ใบ` : "ยังไม่อัปเดต";
