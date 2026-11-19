@@ -130,6 +130,37 @@
     .daily-row[data-price="100"] .daily-type { color: #1749a5; }
     .daily-row[data-price="150"] .daily-type { color: #17643b; }
     .daily-actions { margin-top: 13px; }
+    .date-panel { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; padding: 12px 15px; border: 1px solid #b8cbee; border-radius: 14px; background: linear-gradient(135deg, #eaf1ff, #f7faff); }
+    .date-control { display: grid; gap: 3px; }
+    .date-control label { color: #173c78; font-weight: 850; }
+    .date-control small { color: var(--muted); font-size: .8rem; }
+    .date-controls { display: flex; align-items: center; gap: 8px; }
+    input[type="date"], input[type="text"] { min-height: 44px; padding: 8px 10px; border: 1px solid #cbd6e3; border-radius: 10px; background: #fff; color: #172033; font: inherit; font-size: 16px; }
+    .date-badge { padding: 5px 9px; border-radius: 999px; background: #d8e7ff; color: #1749a5; font-size: .82rem; font-weight: 850; white-space: nowrap; }
+    .date-badge.today { background: #d8f1df; color: #17643b; }
+    .group-panel, .adjustment-panel, .message-panel { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 16px rgba(24, 36, 58, .04); }
+    .group-panel h3, .adjustment-panel h3, .message-panel h3 { margin: 0; color: var(--navy); font-size: 1rem; }
+    .group-panel p, .adjustment-panel p, .message-panel p { margin: 4px 0 9px; color: var(--muted); font-size: .84rem; }
+    .group-list { display: grid; gap: 7px; }
+    .group-row { display: grid; grid-template-columns: minmax(0, 1fr) 100px auto; align-items: end; gap: 8px; padding: 8px; border: 1px solid #e4eaf2; border-radius: 10px; background: #f9fbfe; }
+    .group-row label, .adjust-count label { display: grid; gap: 4px; color: #42536a; font-size: .8rem; font-weight: 700; }
+    .group-row input { width: 100%; min-width: 0; }
+    .group-row input[type="number"] { text-align: center; }
+    .small-action { min-height: 40px; padding: 7px 10px; color: #a32c39; background: #fff4f4; font-size: .84rem; }
+    .group-summary { margin-top: 8px; color: #173c78; font-weight: 850; }
+    .group-summary strong { font-variant-numeric: tabular-nums; }
+    .adjustment-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+    .adjust-count { display: grid; grid-template-columns: minmax(0, 1fr) 86px; align-items: center; gap: 8px; padding: 7px 9px; border: 1px solid #e5eaf1; border-radius: 10px; background: #fafbfd; }
+    .adjust-count label { font-size: .82rem; }
+    .adjust-count input { width: 100%; text-align: center; }
+    .message-panel { border-color: #cbd9ed; background: #f8fbff; }
+    .message-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .message-card { min-width: 0; padding: 10px; border: 1px solid #e1e8f0; border-radius: 11px; background: #fff; }
+    .message-card label { display: block; margin-bottom: 6px; color: var(--navy); font-weight: 850; }
+    .message-card textarea { width: 100%; min-height: 230px; resize: vertical; padding: 10px; border: 1px solid #cbd6e3; border-radius: 9px; color: #172033; background: #fff; font: inherit; font-size: .88rem; line-height: 1.55; }
+    .message-actions { display: flex; gap: 7px; margin-top: 7px; }
+    .message-actions button { flex: 1; min-height: 40px; padding: 7px 9px; font-size: .83rem; }
+    .copy-status { min-height: 20px; margin-top: 4px; color: #08776b; font-size: .8rem; }
     .ticket-card[data-price="40"] .price-tag, .counter-card[data-price="40"] .price-tag { background: #f3e8ff; color: #6b21a8; }
     .ticket-card[data-price="60"] .price-tag, .counter-card[data-price="60"] .price-tag { background: #fff4cf; color: #754500; }
     .ticket-card[data-price="100"] .price-tag, .counter-card[data-price="100"] .price-tag { background: #eaf1ff; color: #1749a5; }
@@ -234,6 +265,15 @@
       .legacy-free-entry { font-size: .72rem; }
       .counter-note { font-size: .77rem; line-height: 1.35; }
       .daily-summary { padding: 9px 10px; }
+      .date-panel { align-items: stretch; flex-direction: column; gap: 7px; padding: 10px; }
+      .date-controls { width: 100%; }
+      .date-controls input { flex: 1; min-width: 0; }
+      .group-panel, .adjustment-panel, .message-panel { padding: 10px; }
+      .group-row { grid-template-columns: minmax(0, 1fr) 76px auto; gap: 5px; padding: 6px; }
+      .group-row label { font-size: .72rem; }
+      .group-row .small-action { padding: 6px; font-size: .75rem; }
+      .adjustment-grid, .message-grid { grid-template-columns: 1fr; }
+      .message-card textarea { min-height: 190px; }
       .comparison-panel { padding: 11px; }
       .comparison-heading h2 { font-size: .95rem; }
       .comparison-stats { gap: 5px; margin-top: 7px; }
@@ -274,7 +314,7 @@
       @page { size: A4 portrait; margin: 12mm; }
       html, body { min-height: 0; padding: 0 !important; background: #fff !important; color: #111 !important; }
       body > main { width: 100%; max-width: none; margin: 0; }
-      body > main > header, .page-tabs, #ticket-page { display: none !important; }
+      body > main > header, body > main > .date-panel, .page-tabs, #ticket-page { display: none !important; }
       #counter-page { display: block !important; }
       #counter-page > :not(#daily-report) { display: none !important; }
       #daily-report { display: block !important; color: #111; font-size: 10pt; }
@@ -303,6 +343,11 @@
       <h1>ตารางคำนวณยอดขายตั๋ว</h1>
       <p class="intro">กรอกช่วงเล่มและเลขตั๋วของแต่ละราคา ระบบจะนับตั๋วและรวมยอดขายให้</p>
     </header>
+
+    <section class="date-panel" aria-label="วันที่บันทึกยอด">
+      <div class="date-control"><label for="daily-date-input">📅 วันที่บันทึกยอด</label><small>เปลี่ยนวันที่เพื่อเพิ่มหรือแก้ยอดแยกตามวัน</small></div>
+      <div class="date-controls"><input id="daily-date-input" type="date" aria-label="เลือกวันที่บันทึกยอด"><span id="date-badge" class="date-badge">วันนี้</span><button id="select-today" class="tab-link" type="button">วันนี้</button></div>
+    </section>
 
     <nav class="page-tabs" aria-label="เลือกหน้าคำนวณ">
       <button type="button" class="tab-button active" data-view="ticket-page" aria-pressed="true">คำนวณจากเลขตั๋ว</button>
@@ -397,11 +442,11 @@
     <section id="counter-page" class="page-panel" hidden>
       <header class="counter-heading">
         <h2>คำนวณจำนวนคนและยอดเงิน</h2>
-        <p>กรอกจำนวนคน แล้วยอดจะคำนวณให้ทันที</p>
+        <p>กรอกจำนวนคน แล้วยอดจะคำนวณให้ทันที · วันที่ในแถบด้านบนเปลี่ยนได้</p>
       </header>
 
       <section class="daily-glance" aria-label="สรุปยอดใช้บริการวันนี้">
-        <div class="daily-glance-top"><span><span class="daily-glance-title">📊 สรุปวันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
+        <div class="daily-glance-top"><span><span class="daily-glance-title" id="daily-glance-title">📊 สรุปวันนี้</span><small class="daily-glance-date" id="counter-today-date"></small></span><span class="daily-glance-status" id="counter-today-status">ยังไม่เทียบยอดตั๋ว</span></div>
         <div class="daily-glance-values">
           <div class="daily-glance-card"><span>👥 ผู้เข้าชมวันนี้</span><strong id="counter-today-people">0 คน</strong></div>
           <div class="daily-glance-card"><span>💰 ยอดเงินวันนี้</span><strong id="counter-today-money">0 บาท</strong></div>
@@ -449,11 +494,19 @@
         </label>
       </section>
 
+      <section class="group-panel" aria-labelledby="group-panel-title">
+        <h3 id="group-panel-title">👨‍👩‍👧‍👦 ผู้เข้าชมแบบหมู่คณะ (ไม่บังคับ)</h3>
+        <p>เพิ่มชื่อหน่วยงานและจำนวนคน ระบบคิดคนละ 40 บาท และรวมยอดทันที</p>
+        <div id="group-list" class="group-list"></div>
+        <div class="counter-actions"><button id="add-group" class="tab-link" type="button">＋ เพิ่มหน่วยงาน</button></div>
+        <div class="group-summary" id="group-total">หมู่คณะ 0 คน · 0 บาท</div>
+      </section>
+
       <section class="counter-total-grid entry-total-grid" aria-label="ยอดของจำนวนที่กรอก">
         <div class="counter-total-card"><span>👥 จำนวนคนรวมรอบนี้</span><strong id="entry-total-people">0 คน</strong></div>
         <div class="counter-total-card"><span>💰 ยอดเงินรอบนี้</span><strong id="entry-total-money">0 บาท</strong></div>
       </section>
-      <p class="counter-note" id="counter-entry-note" aria-live="polite">ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดเทียบวันนี้</p>
+        <p class="counter-note" id="counter-entry-note" aria-live="polite">ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดวันที่เลือก</p>
       <div class="counter-actions">
         <button class="calculate" id="record-counter" type="button">บันทึกยอดเข้ารวมวันนี้</button>
         <button class="reset" id="clear-counter-entry" type="button">ล้างจำนวนที่กรอก</button>
@@ -477,6 +530,11 @@
             <div class="daily-row" data-price="free" role="row"><span class="daily-type" role="cell">ยกเว้นอื่นๆ</span><span role="cell">—</span><span id="daily-people-free-other" role="cell">0 คน</span><span role="cell">—</span></div>
             <div class="daily-row" id="daily-row-free-legacy" data-price="free" role="row" hidden><span class="daily-type" role="cell">ยอดเดิมที่ยังไม่แยกประเภท</span><span role="cell">—</span><span id="daily-people-free-legacy" role="cell">0 คน</span><span role="cell">—</span></div>
           </div>
+          <section class="group-panel report-groups" aria-labelledby="report-groups-title">
+            <h3 id="report-groups-title">ผู้เข้าชมแบบหมู่คณะ</h3>
+            <div id="report-group-rows"></div>
+            <p class="group-summary" id="report-group-total">รวม 0 คน · 0 บาท</p>
+          </section>
           <section class="counter-total-grid" aria-label="ยอดสะสมวันนี้">
             <div class="counter-total-card"><span>จำนวนคนรวมวันนี้</span><strong id="daily-total-people">0 คน</strong></div>
             <div class="counter-total-card"><span>ยอดเงินรวมวันนี้</span><strong id="daily-total-money">0 บาท</strong></div>
@@ -486,6 +544,31 @@
             <button class="reset" id="reset-daily" type="button">ล้างยอดวันนี้ เริ่มวันใหม่</button>
           </div>
         </details>
+      </section>
+
+      <section class="adjustment-panel" aria-labelledby="adjustment-title">
+        <h3 id="adjustment-title">✏️ แก้ไขจำนวนคนที่บันทึกแล้ว</h3>
+        <p>แก้ตัวเลขยอดสะสมได้โดยตรง เพิ่มหรือลดได้ตลอด ระบบจะคำนวณยอดใหม่ให้อัตโนมัติ</p>
+        <div class="adjustment-grid">
+          <div class="adjust-count"><label for="saved-count-40">นักศึกษา นักเรียน บุคลากร · 40 บาท</label><input id="saved-count-40" data-saved-count="40" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 40 บาท"></div>
+          <div class="adjust-count"><label for="saved-count-60">ผู้ใหญ่ · 60 บาท</label><input id="saved-count-60" data-saved-count="60" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 60 บาท"></div>
+          <div class="adjust-count"><label for="saved-count-100">เด็กต่างชาติ · 100 บาท</label><input id="saved-count-100" data-saved-count="100" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 100 บาท"></div>
+          <div class="adjust-count"><label for="saved-count-150">ผู้ใหญ่ต่างชาติ · 150 บาท</label><input id="saved-count-150" data-saved-count="150" type="number" min="0" step="1" inputmode="numeric" aria-label="ยอดบันทึกแล้ว 150 บาท"></div>
+          <div class="adjust-count"><label for="saved-free-short">เด็กต่ำกว่า 120 ซม. · ฟรี</label><input id="saved-free-short" data-saved-count="freeShort" type="number" min="0" step="1" inputmode="numeric"></div>
+          <div class="adjust-count"><label for="saved-free-disabled">ผู้พิการ · ฟรี</label><input id="saved-free-disabled" data-saved-count="freeDisabled" type="number" min="0" step="1" inputmode="numeric"></div>
+          <div class="adjust-count"><label for="saved-free-monk">ภิกษุ · ฟรี</label><input id="saved-free-monk" data-saved-count="freeMonk" type="number" min="0" step="1" inputmode="numeric"></div>
+          <div class="adjust-count"><label for="saved-free-other">ยกเว้นอื่นๆ · ฟรี</label><input id="saved-free-other" data-saved-count="freeOther" type="number" min="0" step="1" inputmode="numeric"></div>
+          <div class="adjust-count" id="saved-free-legacy-wrap" hidden><label for="saved-free-legacy">ยอดฟรีเดิมที่ยังไม่แยกประเภท</label><input id="saved-free-legacy" data-saved-count="freeLegacy" type="number" min="0" step="1" inputmode="numeric"></div>
+        </div>
+      </section>
+
+      <section class="message-panel" aria-labelledby="message-panel-title">
+        <h3 id="message-panel-title">📝 ข้อความเปิดวันและท้ายวัน</h3>
+        <p>สร้างจากวันที่ เลขตั๋ว และยอดที่บันทึกไว้ แก้ข้อความก่อนคัดลอกได้</p>
+        <div class="message-grid">
+          <div class="message-card"><label for="start-message">ข้อความเริ่มวัน</label><textarea id="start-message" spellcheck="false"></textarea><div class="message-actions"><button class="tab-link" type="button" data-copy-message="start-message">📋 คัดลอก</button><button class="tab-link" type="button" data-generate-message="start-message">สร้างใหม่</button></div><div class="copy-status" id="start-copy-status" aria-live="polite"></div></div>
+          <div class="message-card"><label for="end-message">ข้อความท้ายวัน</label><textarea id="end-message" spellcheck="false"></textarea><div class="message-actions"><button class="tab-link" type="button" data-copy-message="end-message">📋 คัดลอก</button><button class="tab-link" type="button" data-generate-message="end-message">สร้างใหม่</button></div><div class="copy-status" id="end-copy-status" aria-live="polite"></div></div>
+        </div>
       </section>
 
       <section id="daily-report" class="print-report" aria-label="รายงานยอดใช้บริการพิพิธภัณฑ์ประจำวัน">
@@ -502,6 +585,8 @@
           <div class="report-stat"><span>💰 ยอดหน้าเคาน์เตอร์</span><strong id="report-cash-total">0 บาท</strong></div>
           <div class="report-stat"><span>🧾 ยอดจากเลขตั๋ว</span><strong id="report-ticket-sales">— บาท</strong></div>
         </div>
+        <h2>ผู้เข้าชมแบบหมู่คณะ · คนละ 40 บาท</h2>
+        <table class="report-table"><thead><tr><th>หน่วยงาน</th><th>จำนวนคน</th><th>ยอดเงิน</th></tr></thead><tbody id="report-groups-print"><tr><td>ไม่มีข้อมูลหมู่คณะ</td><td>0</td><td>0 บาท</td></tr></tbody></table>
         <h2>เปรียบเทียบตั๋วขายกับคนชำระเงิน</h2>
         <table class="report-table">
           <thead><tr><th>ประเภทตั๋ว</th><th>ตั๋วขาย</th><th>คนชำระ</th><th>ผลต่าง</th><th>ยอดตั๋ว</th><th>ยอดเคาน์เตอร์</th></tr></thead>
@@ -559,116 +644,287 @@
           freeLegacy: 0,
         };
       }
+      const dateInput = document.getElementById("daily-date-input");
       let dailyDate = localDateKey();
+      let savedDays = {};
       let dailyCounts = emptyDailyCounts();
       let dailyTicketCounts = emptyTicketCounts();
       let dailyTicketCountsRecorded = false;
-
-      function refreshDayIfNeeded() {
-        const currentDate = localDateKey();
-        if (currentDate === dailyDate) return false;
-        dailyDate = currentDate;
-        dailyCounts = emptyDailyCounts();
-        dailyTicketCounts = emptyTicketCounts();
-        dailyTicketCountsRecorded = false;
-        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
-        document.getElementById("legacy-free-entry").hidden = true;
-        return true;
-      }
+      let dailyTicketRanges = {};
+      let dailyGroups = [];
 
       function save() {
-        refreshDayIfNeeded();
-        const data = {
-          perBook: perBookInput.value,
+        const record = {
+          counts: { ...dailyCounts },
+          tickets: { ...dailyTicketCounts },
+          ticketCountsRecorded: dailyTicketCountsRecorded,
+          ticketRanges: { ...dailyTicketRanges },
           prices: {},
-          daily: {
-            date: dailyDate,
-            counts: { ...dailyCounts },
-            tickets: { ...dailyTicketCounts },
-            ticketCountsRecorded: dailyTicketCountsRecorded,
-          },
           counterDraft: {},
+          groups: dailyGroups.map(group => ({ name: group.name, count: group.count })),
         };
         for (const card of cards) {
           const price = card.dataset.price;
-          data.prices[price] = {};
+          record.prices[price] = {};
           for (const input of card.querySelectorAll("[data-field]")) {
-            data.prices[price][input.dataset.field] = input.value;
+            record.prices[price][input.dataset.field] = input.value;
           }
         }
         for (const price of counterPrices) {
           const input = document.getElementById(`counter-${price}`);
-          data.counterDraft[String(price)] = input ? input.value : "0";
+          record.counterDraft[String(price)] = input ? input.value : "0";
         }
         for (const category of freeCategories) {
           const input = document.getElementById(category.inputId);
-          data.counterDraft[category.key] = input ? input.value : "0";
+          record.counterDraft[category.key] = input ? input.value : "0";
         }
-        data.counterDraft.freeLegacy = document.getElementById("counter-free-legacy").value;
+        record.counterDraft.freeLegacy = document.getElementById("counter-free-legacy").value;
+        savedDays[dailyDate] = record;
+        const data = { perBook: perBookInput.value, selectedDate: dailyDate, days: savedDays };
         try { localStorage.setItem(storageKey, JSON.stringify(data)); } catch (_) {}
+      }
+
+      function safeCount(value) {
+        const count = Number(value || 0);
+        return Number.isInteger(count) && count >= 0 ? count : 0;
+      }
+
+      function clearDayFields() {
+        for (const card of cards) for (const input of card.querySelectorAll("[data-field]")) input.value = "";
+        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
+        document.getElementById("legacy-free-entry").hidden = true;
+      }
+
+      function updateSavedCountInputs() {
+        for (const input of document.querySelectorAll("[data-saved-count]")) {
+          input.value = dailyCounts[input.dataset.savedCount] || 0;
+        }
+        document.getElementById("saved-free-legacy-wrap").hidden = !(dailyCounts.freeLegacy > 0);
+      }
+
+      function renderGroupEditor() {
+        const list = document.getElementById("group-list");
+        list.replaceChildren();
+        dailyGroups.forEach((group, index) => {
+          const row = document.createElement("div");
+          row.className = "group-row";
+          const nameLabel = document.createElement("label");
+          nameLabel.textContent = "ชื่อหน่วยงาน";
+          const nameInput = document.createElement("input");
+          nameInput.type = "text";
+          nameInput.value = group.name;
+          nameInput.placeholder = "เช่น โรงเรียน…";
+          nameInput.setAttribute("aria-label", `ชื่อหน่วยงานหมู่คณะที่ ${index + 1}`);
+          nameInput.addEventListener("input", () => {
+            dailyGroups[index].name = nameInput.value;
+            save();
+            renderDailySummary();
+          });
+          nameLabel.append(nameInput);
+          const countLabel = document.createElement("label");
+          countLabel.textContent = "จำนวนคน";
+          const countInput = document.createElement("input");
+          countInput.type = "number";
+          countInput.min = "0";
+          countInput.step = "1";
+          countInput.inputMode = "numeric";
+          countInput.value = group.count;
+          countInput.setAttribute("aria-label", `จำนวนคนหมู่คณะที่ ${index + 1}`);
+          countInput.addEventListener("change", () => {
+            dailyGroups[index].count = safeCount(countInput.value);
+            countInput.value = dailyGroups[index].count;
+            save();
+            updateCounter();
+          });
+          countLabel.append(countInput);
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "small-action";
+          remove.textContent = "ลบ";
+          remove.setAttribute("aria-label", `ลบหมู่คณะที่ ${index + 1}`);
+          remove.addEventListener("click", () => {
+            dailyGroups.splice(index, 1);
+            renderGroupEditor();
+            save();
+            updateCounter();
+          });
+          row.append(nameLabel, countLabel, remove);
+          list.append(row);
+        });
+      }
+
+      function setCurrentDay(dateKey, record = null) {
+        dailyDate = dateKey;
+        const data = record || {};
+        dailyCounts = { ...emptyDailyCounts(), ...(data.counts || {}) };
+        dailyTicketCounts = { ...emptyTicketCounts(), ...(data.tickets || {}) };
+        dailyTicketCounts = Object.fromEntries(counterPrices.map(price => [String(price), safeCount(dailyTicketCounts[String(price)])]));
+        for (const price of counterPrices) dailyCounts[String(price)] = safeCount(dailyCounts[String(price)]);
+        for (const category of freeCategories) dailyCounts[category.key] = safeCount(dailyCounts[category.key]);
+        dailyCounts.freeLegacy = safeCount(dailyCounts.freeLegacy ?? dailyCounts.free);
+        dailyTicketCountsRecorded = Boolean(data.ticketCountsRecorded);
+        dailyTicketRanges = data.ticketRanges && typeof data.ticketRanges === "object" ? data.ticketRanges : {};
+        dailyGroups = Array.isArray(data.groups) ? data.groups.map(group => ({ name: String(group.name || ""), count: safeCount(group.count) })) : [];
+        clearDayFields();
+        for (const card of cards) {
+          const values = data.prices && data.prices[card.dataset.price];
+          if (!values) continue;
+          for (const input of card.querySelectorAll("[data-field]")) input.value = values[input.dataset.field] || "";
+        }
+        const draft = data.counterDraft || {};
+        for (const price of counterPrices) {
+          const input = document.getElementById(`counter-${price}`);
+          if (draft[String(price)] !== undefined) input.value = draft[String(price)];
+        }
+        for (const category of freeCategories) {
+          const input = document.getElementById(category.inputId);
+          if (draft[category.key] !== undefined) input.value = draft[category.key];
+        }
+        const legacyDraft = draft.freeLegacy ?? draft.free;
+        if (legacyDraft !== undefined) document.getElementById("counter-free-legacy").value = legacyDraft;
+        document.getElementById("legacy-free-entry").hidden = !(Number(document.getElementById("counter-free-legacy").value) > 0);
+        dateInput.value = dateKey;
+        updateSavedCountInputs();
+        renderGroupEditor();
+        updateDateBadge();
       }
 
       function restore() {
         try {
           const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
-          if (!saved) return;
-          const currentDate = localDateKey();
-          dailyDate = currentDate;
-          const sameDay = saved.daily && saved.daily.date === currentDate;
-          if (sameDay && saved.daily.counts) {
-            for (const price of counterPrices) {
-              const count = Number(saved.daily.counts[String(price)] || 0);
-              dailyCounts[String(price)] = Number.isInteger(count) && count >= 0 ? count : 0;
-            }
-            for (const category of freeCategories) {
-              const count = Number(saved.daily.counts[category.key] || 0);
-              dailyCounts[category.key] = Number.isInteger(count) && count >= 0 ? count : 0;
-            }
-            // Retain aggregate-free totals saved by earlier versions without assigning them a reason.
-            const legacyFreeCount = Number(saved.daily.counts.freeLegacy ?? saved.daily.counts.free ?? 0);
-            dailyCounts.freeLegacy = Number.isInteger(legacyFreeCount) && legacyFreeCount >= 0 ? legacyFreeCount : 0;
-            if (saved.daily.tickets) {
-              for (const price of counterPrices) {
-                const count = Number(saved.daily.tickets[String(price)] || 0);
-                dailyTicketCounts[String(price)] = Number.isInteger(count) && count >= 0 ? count : 0;
-              }
-              dailyTicketCountsRecorded = saved.daily.ticketCountsRecorded !== false;
-            }
+          if (!saved) {
+            setCurrentDay(localDateKey());
+            return;
           }
           if (saved.perBook !== undefined && saved.perBook !== "") perBookInput.value = saved.perBook;
-          for (const card of cards) {
-            const values = saved.prices && saved.prices[card.dataset.price];
-            if (!values) continue;
-            for (const input of card.querySelectorAll("[data-field]")) {
-              input.value = values[input.dataset.field] || "";
+          if (saved.days && typeof saved.days === "object") savedDays = saved.days;
+          if (saved.daily && saved.daily.date) {
+            const legacyDay = savedDays[saved.daily.date] || {};
+            const legacyPrices = legacyDay.prices || saved.prices || {};
+            const legacyTickets = legacyDay.tickets || saved.daily.tickets || emptyTicketCounts();
+            const migratedRanges = { ...(legacyDay.ticketRanges || {}) };
+            if (!legacyDay.ticketRanges && saved.daily.ticketCountsRecorded) {
+              for (const price of counterPrices) {
+                const values = legacyPrices[String(price)];
+                if (!values || !["bookStart", "ticketStart", "bookEnd", "ticketEnd"].every(key => Number.isInteger(Number(values[key])) && Number(values[key]) > 0)) continue;
+                migratedRanges[String(price)] = {
+                  bookStart: Number(values.bookStart), ticketStart: Number(values.ticketStart),
+                  bookEnd: Number(values.bookEnd), ticketEnd: Number(values.ticketEnd),
+                  count: safeCount(legacyTickets[String(price)]),
+                };
+              }
             }
+            savedDays[saved.daily.date] = {
+              ...legacyDay,
+              counts: legacyDay.counts || saved.daily.counts || emptyDailyCounts(),
+              tickets: legacyTickets,
+              ticketCountsRecorded: legacyDay.ticketCountsRecorded ?? Boolean(saved.daily.ticketCountsRecorded),
+              prices: legacyPrices,
+              counterDraft: legacyDay.counterDraft || saved.counterDraft || {},
+              ticketRanges: migratedRanges,
+              groups: legacyDay.groups || [],
+            };
           }
-          if (sameDay && saved.counterDraft) {
-            for (const price of counterPrices) {
-              const input = document.getElementById(`counter-${price}`);
-              const value = saved.counterDraft[String(price)];
-              if (input && value !== undefined) input.value = value;
-            }
-            for (const category of freeCategories) {
-              const input = document.getElementById(category.inputId);
-              const value = saved.counterDraft[category.key];
-              if (input && value !== undefined) input.value = value;
-            }
-            const legacyDraft = saved.counterDraft.freeLegacy ?? saved.counterDraft.free;
-            if (legacyDraft !== undefined) {
-              const legacyInput = document.getElementById("counter-free-legacy");
-              legacyInput.value = legacyDraft;
-              document.getElementById("legacy-free-entry").hidden = !(Number(legacyDraft) > 0);
-            }
+          const today = localDateKey();
+          setCurrentDay(today, savedDays[today] || null);
+        } catch (_) {
+          setCurrentDay(localDateKey());
+        }
+      }
+
+      function updateDateBadge() {
+        const isToday = dailyDate === localDateKey();
+        const badge = document.getElementById("date-badge");
+        badge.textContent = isToday ? "วันนี้" : "วันที่เลือก";
+        badge.classList.toggle("today", isToday);
+        const dayLabel = isToday ? "วันนี้" : formatThaiDate();
+        document.getElementById("daily-glance-title").textContent = `📊 สรุป${dayLabel}`;
+        document.getElementById("daily-summary-title").textContent = `สรุปเทียบยอด${dayLabel}`;
+        document.getElementById("record-counter").textContent = `บันทึกยอดเข้ารวม${isToday ? "วันนี้" : "วันที่เลือก"}`;
+        document.getElementById("reset-daily").textContent = `ล้างยอด${isToday ? "วันนี้" : "วันที่เลือก"} เริ่มวันใหม่`;
+      }
+
+      function formatThaiDate(dateKey = dailyDate) {
+        const date = new Date(`${dateKey}T12:00:00`);
+        const weekday = new Intl.DateTimeFormat("th-TH", { weekday: "long" }).format(date).replace(/^วัน/, "");
+        const datePart = new Intl.DateTimeFormat("th-TH", { day: "numeric", month: "long", year: "numeric" }).format(date);
+        return `${weekday} ที่ ${datePart}`;
+      }
+
+      function padTicketNumber(value) {
+        return String(value).padStart(3, "0");
+      }
+
+      function buildOpeningMessage() {
+        const lines = [
+          "เริ่มวัน : เปิดจำหน่ายบัตรเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
+          `ประจำวัน ${formatThaiDate()}`,
+          "",
+        ];
+        for (const price of counterPrices) {
+          const card = cards.find(item => item.dataset.price === String(price));
+          const bookStart = card.querySelector('[data-field="bookStart"]').value;
+          const ticketStart = card.querySelector('[data-field="ticketStart"]').value;
+          lines.push(`บัตรค่าธรรมเนียมชนิด ${price} บาท`);
+          lines.push(bookStart && ticketStart
+            ? `เล่มที่ ${padTicketNumber(bookStart)} เลขที่ ${padTicketNumber(ticketStart)}`
+            : "ยังไม่ได้ระบุเลขเริ่มต้น");
+          lines.push("");
+        }
+        return lines.join("\n").trimEnd();
+      }
+
+      function buildClosingMessage() {
+        const groupPeople = dailyGroups.reduce((sum, group) => sum + safeCount(group.count), 0);
+        const groupMoney = groupPeople * 40;
+        const freeLabels = [
+          ["freeShort", "เด็กส่วนสูงไม่ถึง 120 เซนติเมตร"], ["freeDisabled", "ผู้พิการ"],
+          ["freeMonk", "ภิกษุ"], ["freeOther", "ยกเว้นกรณีพิเศษ"], ["freeLegacy", "ยอดฟรีเดิมที่ยังไม่แยกประเภท"],
+        ];
+        const freePeople = freeLabels.reduce((sum, [key]) => sum + safeCount(dailyCounts[key]), 0);
+        const paidPeople = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]), 0) + groupPeople;
+        const totalPeople = paidPeople + freePeople;
+        const totalMoney = counterPrices.reduce((sum, price) => sum + safeCount(dailyCounts[String(price)]) * price, 0) + groupMoney;
+        const freeBreakdown = freeLabels.filter(([key]) => safeCount(dailyCounts[key]) > 0)
+          .map(([key, label]) => `${label} ${numberFormat.format(dailyCounts[key])} คน`).join(" และ ") || "ไม่มีผู้เข้าชมฟรี";
+        const lines = [
+          "ท้ายวัน :ส่งเงินรายได้ค่าเข้าชมพิพิธภัณฑ์ธรรมชาติวิทยาเทพรัตน์ราชสุดา",
+          `ประจำวัน ${formatThaiDate()}`,
+          "",
+          `ยอดเงินรวม ${numberFormat.format(totalMoney)} บาท`,
+          "",
+          `เข้าชมแบบหมู่คณะ จำนวน ${numberFormat.format(groupPeople)} คน คนละ 40 บาท เป็นเงิน ${numberFormat.format(groupMoney)} บาท`,
+        ];
+        for (const group of dailyGroups) {
+          lines.push(`${group.name || "ไม่ระบุหน่วยงาน"} จำนวน ${numberFormat.format(safeCount(group.count))} คน เป็นเงิน ${numberFormat.format(safeCount(group.count) * 40)} บาท`);
+        }
+        lines.push("");
+        for (const price of counterPrices) {
+          const range = dailyTicketRanges[String(price)];
+          lines.push(`บัตรค่าธรรมเนียมชนิด ${price} บาท`);
+          if (range) {
+            lines.push(`เล่มที่ ${padTicketNumber(range.bookStart)} เลขที่ ${padTicketNumber(range.ticketStart)} ถึงเล่มที่ ${padTicketNumber(range.bookEnd)} เลขที่ ${padTicketNumber(range.ticketEnd)} จำนวน ${numberFormat.format(safeCount(range.count))} ใบ`);
+          } else {
+            lines.push("ยังไม่ได้บันทึกช่วงเลขตั๋ว");
           }
-        } catch (_) {}
+          lines.push("");
+        }
+        lines.push(`ผู้ใช้บริการแบบมีค่าธรรมเนียม ${numberFormat.format(paidPeople)} คน`);
+        lines.push(`ผู้ใช้บริการแบบยกเว้นค่าธรรมเนียม ${numberFormat.format(freePeople)} คน (${freeBreakdown})`);
+        lines.push("");
+        lines.push(`ผู้ใช้บริการรวมทั้งสิ้น ${numberFormat.format(totalPeople)} คน`);
+        return lines.join("\n");
+      }
+
+      function updateMessages(force = false) {
+        const opening = document.getElementById("start-message");
+        const closing = document.getElementById("end-message");
+        if (force || document.activeElement !== opening) opening.value = buildOpeningMessage();
+        if (force || document.activeElement !== closing) closing.value = buildClosingMessage();
       }
 
       function renderDailySummary() {
-        if (refreshDayIfNeeded()) save();
-        const dateText = new Intl.DateTimeFormat("th-TH", {
-          weekday: "long", day: "numeric", month: "long", year: "numeric",
-        }).format(new Date());
+        const dateText = formatThaiDate();
         document.getElementById("daily-date").textContent = `ประจำวันที่ ${dateText}`;
         let totalPeople = 0;
         let totalMoney = 0;
@@ -676,8 +932,10 @@
         let paidPeople = 0;
         let totalTickets = 0;
         let mismatchedTypes = 0;
+        const groupPeople = dailyGroups.reduce((sum, group) => sum + safeCount(group.count), 0);
+        const groupMoney = groupPeople * 40;
         for (const price of counterPrices) {
-          const count = dailyCounts[String(price)] || 0;
+          const count = (dailyCounts[String(price)] || 0) + (price === 40 ? groupPeople : 0);
           const amount = count * price;
           const ticketCount = dailyTicketCounts[String(price)] || 0;
           const ticketAmount = ticketCount * price;
@@ -709,6 +967,40 @@
         document.getElementById("daily-row-free-legacy").hidden = legacyFreeCount === 0;
         totalPeople += legacyFreeCount;
         freePeople += legacyFreeCount;
+        document.getElementById("group-total").textContent = `หมู่คณะ ${numberFormat.format(groupPeople)} คน · ${numberFormat.format(groupMoney)} บาท`;
+        document.getElementById("report-group-total").textContent = `รวม ${numberFormat.format(groupPeople)} คน · ${numberFormat.format(groupMoney)} บาท`;
+        const reportGroupRows = document.getElementById("report-group-rows");
+        reportGroupRows.replaceChildren();
+        const printableGroupRows = document.getElementById("report-groups-print");
+        printableGroupRows.replaceChildren();
+        if (dailyGroups.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "counter-note";
+          empty.textContent = "ไม่มีข้อมูลหมู่คณะ";
+          reportGroupRows.append(empty);
+          const printRow = document.createElement("tr");
+          for (const value of ["ไม่มีข้อมูลหมู่คณะ", "0", "0 บาท"]) {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            printRow.append(cell);
+          }
+          printableGroupRows.append(printRow);
+        } else {
+          for (const group of dailyGroups) {
+            const row = document.createElement("p");
+            row.className = "counter-note";
+            const count = safeCount(group.count);
+            row.textContent = `${group.name || "ไม่ระบุหน่วยงาน"} · ${numberFormat.format(count)} คน · ${numberFormat.format(count * 40)} บาท`;
+            reportGroupRows.append(row);
+            const printRow = document.createElement("tr");
+            for (const value of [group.name || "ไม่ระบุหน่วยงาน", numberFormat.format(count), `${numberFormat.format(count * 40)} บาท`]) {
+              const cell = document.createElement("td");
+              cell.textContent = value;
+              printRow.append(cell);
+            }
+            printableGroupRows.append(printRow);
+          }
+        }
         document.getElementById("daily-total-people").textContent = `${numberFormat.format(totalPeople)} คน`;
         document.getElementById("daily-total-money").textContent = `${numberFormat.format(totalMoney)} บาท`;
         const difference = totalTickets - paidPeople;
@@ -783,7 +1075,7 @@
         document.getElementById("report-cash-total").textContent = `${numberFormat.format(totalMoney)} บาท`;
         document.getElementById("report-ticket-sales").textContent = dailyTicketCountsRecorded ? `${numberFormat.format(totalTicketMoney)} บาท` : "ยังไม่อัปเดต";
         for (const price of counterPrices) {
-          const count = dailyCounts[String(price)] || 0;
+          const count = (dailyCounts[String(price)] || 0) + (price === 40 ? groupPeople : 0);
           const ticketCount = dailyTicketCounts[String(price)] || 0;
           const amount = count * price;
           const ticketAmount = ticketCount * price;
@@ -807,6 +1099,8 @@
         document.getElementById("report-comparison-note").textContent = dailyTicketCountsRecorded
           ? `ผลเทียบจำนวน: ${differenceText} · ผลเทียบยอดเงิน: ${moneyDifferenceText} · จำนวนเข้าชมรวมรวมผู้เข้าฟรี`
           : "ยังไม่ได้อัปเดตยอดจากหน้าเลขตั๋ว จึงยังเปรียบเทียบจำนวนตั๋วกับคนชำระเงินไม่ได้";
+        updateDateBadge();
+        updateMessages();
       }
 
       function updateCounter() {
@@ -848,7 +1142,7 @@
         document.getElementById("entry-total-money").textContent = valid ? `${numberFormat.format(totalMoney)} บาท` : "—";
         const note = document.getElementById("counter-entry-note");
         note.className = valid ? "counter-note" : "counter-note error";
-        note.textContent = valid ? "ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดเทียบวันนี้" : "จำนวนคนต้องเป็นจำนวนเต็มตั้งแต่ 0 ขึ้นไป";
+        note.textContent = valid ? "ยอดคำนวณทันที · กดบันทึกเพื่อรวมในยอดของวันที่เลือก" : "จำนวนคนต้องเป็นจำนวนเต็มตั้งแต่ 0 ขึ้นไป";
         renderDailySummary();
         return {
           valid, totalPeople, totalMoney, counts, freeCounts,
@@ -946,10 +1240,66 @@
       }
 
       for (const input of document.querySelectorAll("#ticket-page input")) {
-        input.addEventListener("input", () => { save(); calculate(); });
+        input.addEventListener("input", () => { save(); calculate(); updateMessages(); });
       }
       for (const input of document.querySelectorAll(".counter-input")) {
         input.addEventListener("input", () => { save(); updateCounter(); });
+      }
+      dateInput.addEventListener("change", () => {
+        const nextDate = dateInput.value;
+        if (!nextDate) { dateInput.value = dailyDate; return; }
+        if (nextDate === dailyDate) return;
+        save();
+        setCurrentDay(nextDate, savedDays[nextDate] || null);
+        save();
+        calculate();
+        updateCounter();
+      });
+      document.getElementById("select-today").addEventListener("click", () => {
+        dateInput.value = localDateKey();
+        dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+      });
+      document.getElementById("add-group").addEventListener("click", () => {
+        dailyGroups.push({ name: "", count: 0 });
+        renderGroupEditor();
+        save();
+        updateCounter();
+        const names = document.querySelectorAll("#group-list input[type='text']");
+        names[names.length - 1]?.focus();
+      });
+      for (const input of document.querySelectorAll("[data-saved-count]")) {
+        input.addEventListener("change", () => {
+          const value = input.value.trim() === "" ? 0 : Number(input.value);
+          if (!Number.isInteger(value) || value < 0) {
+            input.setCustomValidity("กรอกจำนวนเต็มตั้งแต่ 0 ขึ้นไป");
+            input.reportValidity();
+            input.value = dailyCounts[input.dataset.savedCount] || 0;
+            input.setCustomValidity("");
+            return;
+          }
+          dailyCounts[input.dataset.savedCount] = value;
+          save();
+          updateSavedCountInputs();
+          updateCounter();
+        });
+      }
+      for (const button of document.querySelectorAll("[data-generate-message]")) {
+        button.addEventListener("click", () => updateMessages(true));
+      }
+      for (const button of document.querySelectorAll("[data-copy-message]")) {
+        button.addEventListener("click", async () => {
+          const id = button.dataset.copyMessage;
+          const area = document.getElementById(id);
+          const status = document.getElementById(id === "start-message" ? "start-copy-status" : "end-copy-status");
+          try {
+            await navigator.clipboard.writeText(area.value);
+          } catch (_) {
+            area.focus();
+            area.select();
+            document.execCommand("copy");
+          }
+          status.textContent = "คัดลอกข้อความแล้ว";
+        });
       }
       for (const input of document.querySelectorAll('input[type="number"]')) {
         input.addEventListener("wheel", event => {
@@ -972,6 +1322,15 @@
         const result = calculate();
         if (!result.valid || !result.hasData) return;
         dailyTicketCounts = { ...result.counts };
+        dailyTicketRanges = {};
+        for (const card of cards) {
+          const inputs = [...card.querySelectorAll("[data-field]")];
+          const rawValues = Object.fromEntries(inputs.map(input => [input.dataset.field, input.value.trim()]));
+          const values = Object.fromEntries(Object.entries(rawValues).map(([key, value]) => [key, Number(value)]));
+          if (Object.values(rawValues).every(value => value !== "") && Object.values(values).every(Number.isInteger)) {
+            dailyTicketRanges[card.dataset.price] = { ...values, count: result.counts[card.dataset.price] || 0 };
+          }
+        }
         dailyTicketCountsRecorded = true;
         save();
         renderDailySummary();
@@ -981,8 +1340,12 @@
         for (const card of cards) {
           for (const input of card.querySelectorAll("[data-field]")) input.value = "";
         }
+        dailyTicketRanges = {};
+        dailyTicketCounts = emptyTicketCounts();
+        dailyTicketCountsRecorded = false;
         save();
         calculate();
+        renderDailySummary();
       });
       document.getElementById("record-counter").addEventListener("click", () => {
         const entry = updateCounter();
@@ -993,7 +1356,6 @@
           note.textContent = "กรอกจำนวนคนอย่างน้อยหนึ่งประเภท ก่อนบันทึกยอดวันนี้";
           return;
         }
-        refreshDayIfNeeded();
         for (const price of counterPrices) {
           const input = document.getElementById(`counter-${price}`);
           dailyCounts[String(price)] += entry.counts[String(price)];
@@ -1007,6 +1369,7 @@
         document.getElementById("counter-free-legacy").value = "0";
         document.getElementById("legacy-free-entry").hidden = true;
         save();
+        updateSavedCountInputs();
         updateCounter();
         const note = document.getElementById("counter-entry-note");
         note.className = "counter-note success";
@@ -1019,22 +1382,26 @@
         updateCounter();
       });
       document.getElementById("reset-daily").addEventListener("click", () => {
-        if (!window.confirm("ล้างยอดสะสมวันนี้และเริ่มวันใหม่หรือไม่?")) return;
-        dailyDate = localDateKey();
+        if (!window.confirm(`ล้างยอด${dailyDate === localDateKey() ? "วันนี้" : "วันที่เลือก"}และเริ่มวันใหม่หรือไม่?`)) return;
         dailyCounts = emptyDailyCounts();
         dailyTicketCounts = emptyTicketCounts();
         dailyTicketCountsRecorded = false;
-        for (const input of document.querySelectorAll(".counter-input")) input.value = "0";
+        dailyTicketRanges = {};
+        dailyGroups = [];
+        clearDayFields();
+        updateSavedCountInputs();
+        renderGroupEditor();
         save();
+        calculate();
         updateCounter();
         const note = document.getElementById("counter-entry-note");
         note.className = "counter-note success";
-        note.textContent = "ล้างยอดสะสมวันนี้แล้ว";
+        note.textContent = `ล้างยอด${dailyDate === localDateKey() ? "วันนี้" : "วันที่เลือก"}แล้ว`;
       });
       const appTitle = document.title;
       document.getElementById("print-daily").addEventListener("click", () => {
         renderDailySummary();
-        document.title = `ยอดใช้บริการพิพิธภัณฑ์ประจำวัน-${localDateKey()}`;
+        document.title = `ยอดใช้บริการพิพิธภัณฑ์ประจำวัน-${dailyDate}`;
         window.print();
       });
       window.addEventListener("afterprint", () => { document.title = appTitle; });
@@ -1045,6 +1412,7 @@
   </script>
 </body>
 </html>
+
 
 
 
